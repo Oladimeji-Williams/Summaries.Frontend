@@ -1,0 +1,142 @@
+<section class="delete-page">
+
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Books</p>
+
+      <h1>Delete book</h1>
+
+      <p>
+        Permanently remove this book from your library.
+      </p>
+    </div>
+
+    <a
+      routerLink="/books"
+      class="button"
+    >
+      Back to books
+    </a>
+  </header>
+
+
+  @if (loading()) {
+
+    <section
+      class="state"
+      aria-live="polite"
+    >
+      <p>Loading book...</p>
+    </section>
+
+  }
+
+
+  @if (error(); as errorMessage) {
+
+    <section
+      class="state state-error"
+      role="alert"
+    >
+      <h2>Unable to delete book</h2>
+
+      <p>{{ errorMessage }}</p>
+
+      <div class="actions">
+
+        <a
+          routerLink="/books"
+          class="button"
+        >
+          Back to books
+        </a>
+
+      </div>
+    </section>
+
+  }
+
+
+  @if (book(); as book) {
+
+    <article class="delete-card">
+
+      <header class="delete-card-header">
+
+        <div class="warning-icon" aria-hidden="true">
+          !
+        </div>
+
+        <div>
+          <h2>Are you sure?</h2>
+
+          <p>
+            You are about to permanently delete this book.
+            This action cannot be undone.
+          </p>
+        </div>
+
+      </header>
+
+
+      <section class="book-summary">
+
+        <div class="book-summary-content">
+
+          <h3>{{ book.title }}</h3>
+
+          <p class="author">
+            {{ book.author }}
+          </p>
+
+          <p class="description">
+            {{ book.description }}
+          </p>
+
+        </div>
+
+      </section>
+
+
+      @if (error(); as errorMessage) {
+
+        <div
+          class="inline-error"
+          role="alert"
+        >
+          {{ errorMessage }}
+        </div>
+
+      }
+
+
+      <footer class="actions">
+
+      <button
+        type="button"
+        class="button button-danger"
+        [disabled]="loading()"
+        (click)="deleteBook()"
+      >
+        @if (loading()) {
+          Deleting...
+        } @else {
+          Delete book
+        }
+      </button>
+      <button
+        type="button"
+        class="button"
+        [disabled]="loading()"
+        (click)="cancel()"
+      >
+        Cancel
+      </button>
+
+      </footer>
+
+    </article>
+
+  }
+
+</section>

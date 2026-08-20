@@ -1,0 +1,83 @@
+<section class="details-page">
+  <header class="page-header">
+    <div>
+      <h1>Book details</h1>
+      <p>View the details of this book.</p>
+    </div>
+    <a routerLink="/books" class="button">Back to books</a>
+  </header>
+
+  @if (loading()) {
+    <section class="state">
+      <p>Loading book...</p>
+    </section>
+  }
+
+  @if (error(); as errorMessage) {
+    <section class="state state-error">
+      <h2>Unable to load book</h2>
+      <p>{{ errorMessage }}</p>
+      <a routerLink="/books" class="button">Back to books</a>
+    </section>
+  }
+
+  @if (book(); as book) {
+    <article class="book-details">
+      <header>
+        <h2>{{ book.title }}</h2>
+        <p class="author">{{ book.author }}</p>
+      </header>
+
+      <section class="description">
+        <h3>Description</h3>
+        <p>{{ book.description }}</p>
+      </section>
+
+      <section class="book-metadata">
+        <div class="metadata-item">
+          <span class="metadata-label">Rating</span>
+          @if (book.rating !== null) {
+            <span class="metadata-value">{{ book.rating }}/1</span>
+          } @else {
+            <span class="metadata-value empty-value">Not rated</span>
+          }
+        </div>
+
+        <div class="metadata-item">
+          <span class="metadata-label">Date started</span>
+          @if (book.dateStarted) {
+            <span class="metadata-value">{{ book.dateStarted | date:'medium' }}</span>
+          } @else {
+            <span class="metadata-value empty-value">Not started</span>
+          }
+        </div>
+
+        <div class="metadata-item">
+          <span class="metadata-label">Date read</span>
+          @if (book.dateRead) {
+            <span class="metadata-value">{{ book.dateRead | date:'medium' }}</span>
+          } @else {
+            <span class="metadata-value empty-value">Not read</span>
+          }
+        </div>
+
+        <div class="metadata-item">
+          <span class="metadata-label">Status</span>
+          <span class="status-badge">{{ bookStatusLabel(book.status) }}</span>
+        </div>
+      </section>
+
+      <footer class="actions">
+        @if (book.status !== BookStatus.Read) {
+          <a [routerLink]="['/books', book.id, 'edit']" class="button button-primary">
+            Edit book
+          </a>
+        }
+        <a [routerLink]="['/books', book.id, 'delete-book']" class="button button-danger">
+          Delete Book
+        </a>
+        <a routerLink="/books" class="button">Back</a>
+      </footer>
+    </article>
+  }
+</section>

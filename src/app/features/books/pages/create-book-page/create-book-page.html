@@ -1,0 +1,23 @@
+<section class="form-page">
+  <header class="page-header">
+    <div>
+      <h1>Create book</h1>
+      <p>Add a new book to your collection.</p>
+    </div>
+    <a routerLink="/books" class="button">Cancel</a>
+  </header>
+
+  @if (store.error(); as error) {
+    <section class="error" role="alert">
+      <strong>Unable to create book</strong>
+      <p>{{ error }}</p>
+    </section>
+  }
+
+  <app-book-form
+    [submitting]="store.loading()"
+    submitLabel="Create book"
+    submittingLabel="Creating..."
+    (save)="onSave($event)"
+  />
+</section>

@@ -1,12 +1,43 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import {
+  ApplicationConfig,
+  provideBrowserGlobalErrorListeners,
+} from '@angular/core';
+
+import {
+  provideHttpClient,
+  withFetch,
+  withInterceptors,
+} from '@angular/common/http';
+
+import {
+  provideRouter,
+  withComponentInputBinding,
+} from '@angular/router';
 
 import { routes } from './app.routes';
-import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { httpInterceptors } from './core/interceptors';
+import { API_CONFIG } from './core/config/api-config';
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes), provideClientHydration(withEventReplay())
-  ]
+
+    provideRouter(
+      routes,
+      withComponentInputBinding(),
+    ),
+
+    provideHttpClient(
+      withFetch(),
+      withInterceptors(httpInterceptors),
+    ),
+
+    {
+      provide: API_CONFIG,
+      useValue: {
+        baseUrl: environment.apiBaseUrl,
+      },
+    },
+  ],
 };

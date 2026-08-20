@@ -1,0 +1,42 @@
+<section class="form-page">
+  <header class="page-header">
+    <div>
+      <h1>Edit book</h1>
+      <p>Update the information for this book.</p>
+    </div>
+    <a routerLink="/books" class="button">Back to books</a>
+  </header>
+
+  @if (store.loading() && !store.selectedBook()) {
+    <section class="state">
+      <p>Loading book...</p>
+    </section>
+  }
+
+  @if (store.error(); as error) {
+    <section class="error" role="alert">
+      <strong>Unable to update book</strong>
+      <p>{{ error }}</p>
+    </section>
+  }
+
+  @if (store.selectedBook(); as book) {
+    @if (book.status === BookStatus.Read) {
+      <section class="state">
+        <h2>This book is complete</h2>
+        <p>Books marked as read can no longer be edited.</p>
+        <a [routerLink]="['/books', book.id]" class="button">View book</a>
+      </section>
+    } @else {
+      <app-book-form
+        [initialValue]="initialValue()"
+        [currentStatus]="book.status"
+        [statusEditable]="book.status === BookStatus.InProgress"
+        [submitting]="store.loading()"
+        submitLabel="Save changes"
+        submittingLabel="Saving..."
+        (save)="onSave($event)"
+      />
+    }
+  }
+</section>

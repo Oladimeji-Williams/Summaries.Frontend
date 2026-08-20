@@ -1,0 +1,278 @@
+<section class="books-page">
+  <header class="page-header">
+    <div class="page-heading">
+      <h1>Books</h1>
+      <p>
+        Manage your books and summaries.
+      </p>
+    </div>
+    <div class="page-actions">
+      <div
+        class="view-switch"
+        role="group"
+        aria-label="Book display mode"
+      >
+        <button
+          type="button"
+          class="view-switch-button"
+          [class.active]="viewMode() === 'grid'"
+          [attr.aria-pressed]="
+            viewMode() === 'grid'
+          "
+          (click)="setViewMode('grid')"
+        >
+          <span
+            class="view-switch-icon"
+            aria-hidden="true"
+          >
+            ▦
+          </span>
+          <span>Cards</span>
+        </button>
+        <button
+          type="button"
+          class="view-switch-button"
+          [class.active]="viewMode() === 'table'"
+          [attr.aria-pressed]="
+            viewMode() === 'table'
+          "
+          (click)="setViewMode('table')"
+        >
+          <span
+            class="view-switch-icon"
+            aria-hidden="true"
+          >
+            ☷
+          </span>
+          <span>Table</span>
+        </button>
+      </div>
+      <a
+        routerLink="/books/create"
+        class="button button-primary"
+      >
+        Add book
+      </a>
+    </div>
+  </header>
+  @if (state.loading()) {
+    <section
+      class="state"
+      aria-live="polite"
+    >
+      <p>Loading books...</p>
+    </section>
+  }
+  @if (state.error(); as error) {
+    <section
+      class="state state-error"
+      role="alert"
+    >
+      <h2>Unable to load books</h2>
+      <p>{{ error }}</p>
+      <button
+        type="button"
+        class="button"
+        (click)="state.load()"
+      >
+        Try again
+      </button>
+    </section>
+  }
+  @if (
+    !state.loading() &&
+    !state.error() &&
+    state.hasBooks()
+  ) {
+    @if (viewMode() === 'grid') {
+      <!-- ========================= -->
+      <!-- CARD / GRID VIEW          -->
+      <!-- ========================= -->
+      <section
+        class="book-grid"
+        aria-label="Books"
+      >
+        @for (
+          book of state.books();
+          track book.id
+        ) {
+          <article class="book-card">
+            <div class="book-card-content">
+              <h2>{{ book.title }}</h2>
+              <p class="author">
+                {{ book.author }}
+              </p>
+              <p class="summary">
+                {{ book.description }}
+              </p>
+            </div>
+            <footer class="book-card-actions">
+              <a
+                [routerLink]="['/books', book.id]"
+                class="button"
+              >
+                View
+              </a>
+              @if (book.status !== BookStatus.Read) {
+                <a
+                  [routerLink]="['/books', book.id, 'edit']"
+                  class="button"
+                >
+                  Edit
+                </a>
+              }
+              <a
+                [routerLink]="['/books', book.id, 'delete-book']"
+                class="button button-danger"
+              >
+                Delete
+              </a>
+            </footer>
+          </article>
+        }
+      </section>
+    }
+    @if (viewMode() === 'table') {
+      <section
+        class="book-table-container"
+        aria-label="Books table"
+      >
+        <div class="table-scroll">
+          <table class="book-table">
+            <thead>
+              <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Author</th>
+                <th scope="col">Description</th>
+                <th scope="col">Rating</th>
+                <th scope="col">Started</th>
+                <th scope="col">Read</th>
+                <th scope="col">Status</th>
+                <th
+                  scope="col"
+                  class="actions-column"
+                >
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (
+                book of state.books();
+                track book.id
+              ) {
+                <tr>
+                  <!-- Title -->
+                  <td class="title-cell">
+                    <a
+                      [routerLink]="[
+                        '/books',
+                        book.id
+                      ]"
+                    >
+                      {{ book.title }}
+                    </a>
+                  </td>
+                  <!-- Author -->
+                  <td class="author-cell">
+                    {{ book.author }}
+                  </td>
+                  <!-- Description -->
+                  <td class="description-cell">
+                    {{ book.description }}
+                  </td>
+                  <!-- Rating -->
+                  <td class="rating-cell">
+                    @if (book.rating !== null) {
+                      <span
+                        class="rating-value"
+                        [attr.aria-label]="
+                          'Rating: ' + book.rating + ' out of 5'
+                        "
+                      >
+                        {{ book.rating }}/5
+                      </span>
+                    } @else {
+                      <span class="empty-value">
+                        Not rated
+                      </span>
+                    }
+                  </td>
+                  <!-- Date Started -->
+                  <td class="date-cell">
+                    @if (book.dateStarted) {
+                      {{ book.dateStarted | date:'mediumDate' }}
+                    } @else {
+                      <span class="empty-value">
+                        Not started
+                      </span>
+                    }
+                  </td>
+                  <!-- Date Read -->
+                  <td class="date-cell">
+                    @if (book.dateRead) {
+                      {{ book.dateRead | date:'mediumDate' }}
+                    } @else {
+                      <span class="empty-value">
+                        Not read
+                      </span>
+                    }
+                  </td>
+                  <!-- Status -->
+                  <td class="status-cell">
+                    <span class="status-badge">
+                      {{ bookStatusLabel(book.status) }}
+                    </span>
+                  </td>
+                  <!-- Actions -->
+                  <td class="actions-cell">
+                    <div class="table-actions">
+                      <a
+                        [routerLink]="['/books', book.id]"
+                        class="button button-small"
+                      >
+                        View
+                      </a>
+                      @if (book.status !== BookStatus.Read) {
+                        <a
+                          [routerLink]="['/books', book.id, 'edit']"
+                          class="button button-small"
+                        >
+                          Edit
+                        </a>
+                      }
+                      <a
+                        [routerLink]="['/books', book.id, 'delete-book']"
+                        class="button button-small button-danger"
+                      >
+                        Delete
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    }
+  }
+  @if (
+    !state.loading() &&
+    !state.error() &&
+    !state.hasBooks()
+  ) {
+    <section class="state">
+      <h2>No books yet</h2>
+      <p>
+        Create your first book.
+      </p>
+      <a
+        routerLink="/books/create"
+        class="button button-primary"
+      >
+        Create book
+      </a>
+    </section>
+  }
+</section>

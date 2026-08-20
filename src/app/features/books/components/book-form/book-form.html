@@ -1,0 +1,76 @@
+<form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  <div class="form-field">
+    <label for="title">Title</label>
+    <input id="title" type="text" formControlName="title" autocomplete="off" />
+    @if (form.controls.title.touched && form.controls.title.invalid) {
+      <p class="validation-error">
+        @if (form.controls.title.hasError('trimmedRequired')) { Title is required. }
+        @if (form.controls.title.hasError('maxlength')) { Title cannot exceed 200 characters. }
+      </p>
+    }
+  </div>
+
+  <div class="form-field">
+    <label for="author">Author</label>
+    <input id="author" type="text" formControlName="author" autocomplete="off" />
+    @if (form.controls.author.touched && form.controls.author.invalid) {
+      <p class="validation-error">
+        @if (form.controls.author.hasError('trimmedRequired')) { Author is required. }
+        @if (form.controls.author.hasError('maxlength')) { Author cannot exceed 200 characters. }
+      </p>
+    }
+  </div>
+
+  <div class="form-field">
+    <label for="description">Description</label>
+    <textarea id="description" rows="8" formControlName="description"></textarea>
+    @if (form.controls.description.touched && form.controls.description.invalid) {
+      <p class="validation-error">
+        @if (form.controls.description.hasError('trimmedRequired')) { Description is required. }
+        @if (form.controls.description.hasError('maxlength')) { Description cannot exceed 5000 characters. }
+      </p>
+    }
+  </div>
+
+  <div class="form-field">
+    <label for="rating">Rating</label>
+    <input
+      id="rating"
+      type="number"
+      formControlName="rating"
+      min="0"
+      max="1"
+      step="0.01"
+      inputmode="decimal"
+      placeholder="0.00"
+    />
+    <small class="field-hint">Optional. Enter a rating from 0.00 to 1.00.</small>
+    @if (form.controls.rating.touched && form.controls.rating.invalid) {
+      <p class="validation-error">
+        @if (form.controls.rating.hasError('min')) { Rating cannot be below 0.00. }
+        @if (form.controls.rating.hasError('max')) { Rating cannot be above 1.00. }
+      </p>
+    }
+  </div>
+
+  @if (currentStatus() !== null) {
+    <div class="form-field">
+      <label>Status</label>
+      @if (statusEditable()) {
+        <select formControlName="status">
+          <option [value]="BookStatus.InProgress">In progress</option>
+          <option [value]="BookStatus.Read">Read</option>
+        </select>
+      } @else {
+        <p class="status-readonly">Not started</p>
+      }
+    </div>
+  }
+  
+  <div class="form-actions">
+    <a [routerLink]="cancelLink()" class="button">Cancel</a>
+    <button type="submit" class="button button-primary" [disabled]="submitting()">
+      @if (submitting()) { {{ submittingLabel() }} } @else { {{ submitLabel() }} }
+    </button>
+  </div>
+</form>
