@@ -1,8 +1,8 @@
 import { Component, computed, effect, inject, input, numberAttribute } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { BooksStore } from '../../state/books.store';
-import { BookForm, BookFormValue } from '../../components/book-form/book-form';
-import { BookStatus } from '../../models/book-status.model';
+import { BookForm } from '../../components/book-form/book-form';
+import { BookFormValue, BookStatus } from '../../models';
 
 @Component({
   selector: 'app-edit-book-page',

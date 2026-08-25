@@ -3,15 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { trimmedRequired } from '../../validators/book-form.validators';
 import { BookStatus } from '../../models/book-status.model';
-
-export interface BookFormValue {
-  readonly title: string;
-  readonly author: string;
-  readonly description: string;
-  readonly rating: number | null;
-  /** Present only when the status control is shown and editable. */
-  readonly status?: BookStatus;
-}
+import { BookFormValue } from '../../models/book-form-value.model';
 
 @Component({
   selector: 'app-book-form',

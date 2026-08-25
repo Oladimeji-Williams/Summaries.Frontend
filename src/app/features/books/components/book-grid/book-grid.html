@@ -1,0 +1,18 @@
+<section class="book-grid" aria-label="Books">
+  @for (book of books(); track book.id) {
+    <article class="book-card">
+      <div class="book-card-content">
+        <h2>{{ book.title }}</h2>
+        <p class="author">{{ book.author }}</p>
+        <p class="summary">{{ book.description }}</p>
+      </div>
+      <footer class="book-card-actions">
+        <a [routerLink]="['/books', book.id]" class="button">View</a>
+        @if (book.status !== BookStatus.Read) {
+          <a [routerLink]="['/books', book.id, 'edit']" class="button">Edit</a>
+        }
+        <a [routerLink]="['/books', book.id, 'delete-book']" class="button button-danger">Delete</a>
+      </footer>
+    </article>
+  }
+</section>

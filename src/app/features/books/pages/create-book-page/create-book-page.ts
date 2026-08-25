@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { BooksStore } from '../../state/books.store';
-import { BookForm, BookFormValue } from '../../components/book-form/book-form';
+import { BookForm } from '../../components/book-form/book-form';
+import { BookFormValue } from '../../models';
 
 @Component({
   selector: 'app-create-book-page',
