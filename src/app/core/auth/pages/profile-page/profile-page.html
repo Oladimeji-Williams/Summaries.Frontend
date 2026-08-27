@@ -1,0 +1,20 @@
+<section class="profile-page">
+  <h1>My profile</h1>
+
+  @if (loading()) {
+    <p>Loading...</p>
+  }
+  @if (error(); as err) {
+    <p class="error">{{ err }}</p>
+  }
+  @if (profile(); as p) {
+    <dl>
+      <dt>Name</dt>
+      <dd>{{ p.firstName }} {{ p.lastName }}</dd>
+      <dt>Email</dt>
+      <dd>{{ p.email }}</dd>
+      <dt>Member since</dt>
+      <dd>{{ p.createdAtUtc | date:'mediumDate' }}</dd>
+    </dl>
+  }
+</section>

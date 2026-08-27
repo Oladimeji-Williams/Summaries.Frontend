@@ -1,0 +1,8 @@
+@if (store.isAuthenticated()) {
+  <div class="auth-status">
+    <a routerLink="/profile" class="auth-name">{{ store.displayName() }}</a>
+    <button type="button" class="button-link" (click)="logout()">Log out</button>
+  </div>
+} @else {
+  <a routerLink="/login" class="button-link">Log in</a>
+}

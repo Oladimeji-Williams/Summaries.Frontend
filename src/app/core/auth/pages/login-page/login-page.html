@@ -1,0 +1,29 @@
+<app-auth-shell
+  title="Log in"
+  subtitle="Welcome back — enter your details to continue."
+  [form]="form"
+  [error]="store.error()"
+  [submitting]="store.loading()"
+  submitLabel="Log in"
+  submittingLabel="Logging in..."
+  switchPrompt="Don't have an account?"
+  switchLinkText="Register"
+  switchLinkPath="/register"
+  (formSubmit)="onSubmit()"
+>
+  <div class="form-field">
+    <label for="email">Email</label>
+    <input id="email" type="email" [formControl]="form.controls.email" autocomplete="email" />
+    @if (form.controls.email.touched && form.controls.email.invalid) {
+      <p class="validation-error">A valid email is required.</p>
+    }
+  </div>
+
+  <div class="form-field">
+    <label for="password">Password</label>
+    <input id="password" type="password" [formControl]="form.controls.password" autocomplete="current-password" />
+    @if (form.controls.password.touched && form.controls.password.invalid) {
+      <p class="validation-error">Password is required.</p>
+    }
+  </div>
+</app-auth-shell>

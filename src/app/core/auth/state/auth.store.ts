@@ -1,0 +1,135 @@
+import { computed, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { signalStore, withState, withComputed, withMethods, patchState } from '@ngrx/signals';
+import { firstValueFrom } from 'rxjs';
+import { AuthApiService } from '../data-access/auth-api.service';
+import { AuthResult, LoginRequest, RegisterRequest } from '../models/auth.model';
+import { getApiErrorMessage } from '../../../infrastructure/api/api-error.util';
+
+const STORAGE_KEY = 'summaries.auth';
+
+type AuthState = {
+  accessToken: string | null;
+  refreshToken: string | null;
+  accessTokenExpiresAtUtc: string | null;
+  userId: string | null;
+  email: string | null;
+  displayName: string | null;
+  loading: boolean;
+  error: string | null;
+};
+
+const initialState: AuthState = {
+  accessToken: null,
+  refreshToken: null,
+  accessTokenExpiresAtUtc: null,
+  userId: null,
+  email: null,
+  displayName: null,
+  loading: false,
+  error: null,
+};
+
+export const AuthStore = signalStore(
+  { providedIn: 'root' },
+  withState(initialState),
+  withComputed(({ accessToken }) => ({
+    isAuthenticated: computed(() => accessToken() !== null),
+  })),
+  withMethods((store, authApi = inject(AuthApiService), platformId = inject(PLATFORM_ID)) => {
+    function persist(result: AuthResult | null): void {
+      if (!isPlatformBrowser(platformId)) return;
+      if (result) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(result));
+      } else {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    }
+
+    function applyResult(result: AuthResult): void {
+      patchState(store, {
+        accessToken: result.accessToken,
+        refreshToken: result.refreshToken,
+        accessTokenExpiresAtUtc: result.accessTokenExpiresAtUtc,
+        userId: result.userId,
+        email: result.email,
+        displayName: result.displayName,
+        loading: false,
+        error: null,
+      });
+      persist(result);
+    }
+
+    return {
+      restoreSession(): void {
+        if (!isPlatformBrowser(platformId)) return;
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const result: AuthResult = JSON.parse(raw);
+        if (new Date(result.accessTokenExpiresAtUtc) <= new Date()) {
+          persist(null);
+          return;
+        }
+        patchState(store, {
+          accessToken: result.accessToken,
+          refreshToken: result.refreshToken,
+          accessTokenExpiresAtUtc: result.accessTokenExpiresAtUtc,
+          userId: result.userId,
+          email: result.email,
+          displayName: result.displayName,
+        });
+      },
+
+      async register(request: RegisterRequest): Promise<boolean> {
+        patchState(store, { loading: true, error: null });
+        try {
+          await firstValueFrom(authApi.register(request));
+          patchState(store, { loading: false });
+          return true;
+        } catch (err) {
+          patchState(store, { loading: false, error: getApiErrorMessage(err, 'Unable to register.') });
+          return false;
+        }
+      },
+
+      async login(request: LoginRequest): Promise<boolean> {
+        patchState(store, { loading: true, error: null });
+        try {
+          const result = await firstValueFrom(authApi.login(request));
+          applyResult(result);
+          return true;
+        } catch (err) {
+          patchState(store, { loading: false, error: getApiErrorMessage(err, 'Unable to log in.') });
+          return false;
+        }
+      },
+
+      async refreshSession(): Promise<boolean> {
+        const currentRefreshToken = store.refreshToken();
+        if (!currentRefreshToken) return false;
+        try {
+          const result = await firstValueFrom(authApi.refresh(currentRefreshToken));
+          applyResult(result);
+          return true;
+        } catch {
+          patchState(store, initialState);
+          persist(null);
+          return false;
+        }
+      },
+
+      async logout(): Promise<void> {
+        const currentRefreshToken = store.refreshToken();
+        patchState(store, initialState);
+        persist(null);
+        if (currentRefreshToken) {
+          try {
+            await firstValueFrom(authApi.revoke(currentRefreshToken));
+          } catch {
+            // best-effort — session is already cleared client-side regardless
+          }
+        }
+      },
+    };
+  }),
+);

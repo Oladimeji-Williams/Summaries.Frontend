@@ -1,0 +1,30 @@
+<section class="auth-page">
+  <div class="auth-card">
+    <h1>{{ title() }}</h1>
+    @if (subtitle()) {
+      <p>{{ subtitle() }}</p>
+    }
+
+    @if (error(); as err) {
+      <div class="error" role="alert">{{ err }}</div>
+    }
+
+    <form [formGroup]="form()" (ngSubmit)="submit()" novalidate>
+      <ng-content />
+
+      <button type="submit" class="button button-primary" [disabled]="submitting()">
+        @if (submitting()) {
+          {{ submittingLabel() }}
+        } @else {
+          {{ submitLabel() }}
+        }
+      </button>
+    </form>
+
+    @if (switchPrompt()) {
+      <p class="auth-switch">
+        {{ switchPrompt() }} <a [routerLink]="switchLinkPath()">{{ switchLinkText() }}</a>
+      </p>
+    }
+  </div>
+</section>
