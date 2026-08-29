@@ -6,6 +6,7 @@ import { ApiResponse } from '../../../infrastructure/api/api-response';
 import { Book } from '../models/book.model';
 import { CreateBook } from '../models/create-book.model';
 import { UpdateBook } from '../models/update-book.model';
+import { MarkAsReadRequest } from '../models/mark-as-read.model';
 import { BookApiResponse, mapBookResponse } from '../mappings/book.mapper';
 
 @Injectable({ providedIn: 'root' })
@@ -44,7 +45,7 @@ export class BooksApiService {
     return this.api.post<void, void>(`${this.endpoint}/${id}/start-reading`, undefined);
   }
 
-  markAsRead(id: number): Observable<void> {
-    return this.api.post<void, void>(`${this.endpoint}/${id}/mark-as-read`, undefined);
+  markAsRead(id: number, request: MarkAsReadRequest): Observable<void> {
+    return this.api.post<MarkAsReadRequest, void>(`${this.endpoint}/${id}/mark-as-read`, request);
   }
 }

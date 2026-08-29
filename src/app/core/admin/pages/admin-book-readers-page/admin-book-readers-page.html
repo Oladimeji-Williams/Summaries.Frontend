@@ -1,0 +1,23 @@
+<section class="admin-page">
+  @if (loading()) { <p>Loading...</p> }
+  @if (error(); as err) { <p class="error">{{ err }}</p> }
+  @if (readers(); as r) {
+    <h1>{{ r.title }}</h1>
+    <p>{{ r.author }}</p>
+    <table class="admin-table">
+      <thead><tr><th>Reader</th><th>Email</th><th>Status</th><th>Rating</th><th>Started</th><th>Read</th></tr></thead>
+      <tbody>
+        @for (reader of r.readers; track reader.userId) {
+          <tr>
+            <td>{{ reader.firstName }} {{ reader.lastName }}</td>
+            <td>{{ reader.email }}</td>
+            <td>{{ bookStatusLabel(reader.status) }}</td>
+            <td>{{ reader.rating ?? '—' }}</td>
+            <td>{{ reader.dateStarted ? (reader.dateStarted | date:'medium') : '—' }}</td>
+            <td>{{ reader.dateRead ? (reader.dateRead | date:'medium') : '—' }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</section>

@@ -15,7 +15,11 @@ export class CreateBookPage {
   protected readonly store = inject(BooksStore);
 
   async onSave(value: BookFormValue): Promise<void> {
-    const book = await this.store.create(value);
+    const book = await this.store.create({
+      title: value.title,
+      author: value.author,
+      description: value.description,
+    });
     if (book) {
       void this.router.navigate(['/books', book.id]);
     }

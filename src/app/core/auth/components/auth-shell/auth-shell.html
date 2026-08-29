@@ -21,6 +21,12 @@
       </button>
     </form>
 
+    @if (extraLinkText()) {
+      <p class="auth-extra-link">
+        <a [routerLink]="extraLinkPath()">{{ extraLinkText() }}</a>
+      </p>
+    }
+
     @if (switchPrompt()) {
       <p class="auth-switch">
         {{ switchPrompt() }} <a [routerLink]="switchLinkPath()">{{ switchLinkText() }}</a>

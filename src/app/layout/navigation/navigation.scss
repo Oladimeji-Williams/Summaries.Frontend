@@ -1,0 +1,20 @@
+.site-nav {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  border-bottom: 1px solid #eee;
+
+  a {
+    color: #555;
+    text-decoration: none;
+    font-weight: 600;
+
+    &.active {
+      color: #111;
+    }
+
+    &:hover {
+      color: #111;
+    }
+  }
+}

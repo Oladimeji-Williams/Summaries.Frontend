@@ -1,8 +1,9 @@
 import { Routes } from '@angular/router';
+import { Shell } from './layout/shell/shell';
 import { authGuard } from './core/auth/auth.guard';
+import { adminGuard } from './core/auth/admin.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'books', pathMatch: 'full' },
   {
     path: 'login',
     loadComponent: () => import('./core/auth/pages/login-page/login-page').then(m => m.LoginPage),
@@ -12,14 +13,39 @@ export const routes: Routes = [
     loadComponent: () => import('./core/auth/pages/register-page/register-page').then(m => m.RegisterPage),
   },
   {
-    path: 'books',
-    canActivate: [authGuard],
-    loadChildren: () => import('./features/books/books.routes').then(m => m.booksRoutes),
+    path: 'forgot-password',
+    loadComponent: () => import('./core/auth/pages/forgot-password-page/forgot-password-page').then(m => m.ForgotPasswordPage),
   },
-  { path: '**', redirectTo: 'books' },
   {
-    path: 'profile',
-    canActivate: [authGuard],
-    loadComponent: () => import('./core/auth/pages/profile-page/profile-page').then(m => m.ProfilePage),
+    path: 'reset-password',
+    loadComponent: () => import('./core/auth/pages/reset-password-page/reset-password-page').then(m => m.ResetPasswordPage),
+  },
+  {
+    path: '',
+    component: Shell,
+    children: [
+      { path: '', redirectTo: 'books', pathMatch: 'full' },
+      {
+        path: 'profile',
+        canActivate: [authGuard],
+        loadComponent: () => import('./core/auth/pages/profile-page/profile-page').then(m => m.ProfilePage),
+      },
+      {
+        path: 'change-password',
+        canActivate: [authGuard],
+        loadComponent: () => import('./core/auth/pages/change-password-page/change-password-page').then(m => m.ChangePasswordPage),
+      },
+      {
+        path: 'books',
+        canActivate: [authGuard],
+        loadChildren: () => import('./features/books/books.routes').then(m => m.booksRoutes),
+      },
+      {
+        path: 'admin',
+        canActivate: [adminGuard],
+        loadChildren: () => import('./core/admin/admin.routes').then(m => m.adminRoutes),
+      },
+      { path: '**', redirectTo: 'books' },
+    ],
   },
 ];

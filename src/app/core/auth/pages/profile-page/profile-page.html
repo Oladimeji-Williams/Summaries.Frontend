@@ -1,6 +1,4 @@
 <section class="profile-page">
-  <h1>My profile</h1>
-
   @if (loading()) {
     <p>Loading...</p>
   }
@@ -8,13 +6,50 @@
     <p class="error">{{ err }}</p>
   }
   @if (profile(); as p) {
-    <dl>
-      <dt>Name</dt>
-      <dd>{{ p.firstName }} {{ p.lastName }}</dd>
-      <dt>Email</dt>
-      <dd>{{ p.email }}</dd>
-      <dt>Member since</dt>
-      <dd>{{ p.createdAtUtc | date:'mediumDate' }}</dd>
-    </dl>
+    <article class="profile-card">
+      <div class="avatar">{{ initials() }}</div>
+
+      @if (!editing()) {
+        <h1>{{ p.firstName }} {{ p.lastName }}</h1>
+        <p class="email">{{ p.email }}</p>
+
+        <dl class="profile-meta">
+          <div class="meta-row">
+            <dt>Member since</dt>
+            <dd>{{ p.createdAtUtc | date:'longDate' }}</dd>
+          </div>
+        </dl>
+
+        <div class="profile-actions">
+          <button type="button" class="button" (click)="startEditing()">Edit details</button>
+          <a routerLink="/change-password" class="button">Change password</a>
+          <a routerLink="/books" class="button button-primary">Back to books</a>
+        </div>
+      } @else {
+        <form [formGroup]="form" (ngSubmit)="save()" novalidate class="edit-form">
+          <div class="form-field">
+            <label for="firstName">First name</label>
+            <input id="firstName" type="text" formControlName="firstName" />
+            @if (form.controls.firstName.touched && form.controls.firstName.invalid) {
+              <p class="validation-error">First name is required.</p>
+            }
+          </div>
+          <div class="form-field">
+            <label for="lastName">Last name</label>
+            <input id="lastName" type="text" formControlName="lastName" />
+            @if (form.controls.lastName.touched && form.controls.lastName.invalid) {
+              <p class="validation-error">Last name is required.</p>
+            }
+          </div>
+
+          <div class="profile-actions">
+            <button type="button" class="button" (click)="cancelEditing()" [disabled]="saving()">Cancel</button>
+            <button type="submit" class="button button-primary" [disabled]="saving()">
+              @if (saving()) { Saving... } @else { Save changes }
+            </button>
+          </div>
+        </form>
+      }
+    </article>
   }
 </section>

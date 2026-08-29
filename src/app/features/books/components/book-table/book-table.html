@@ -22,38 +22,40 @@
             <td class="author-cell">{{ book.author }}</td>
             <td class="description-cell">{{ book.description }}</td>
             <td class="rating-cell">
-              @if (book.rating !== null) {
-                <span class="rating-value" [attr.aria-label]="'Rating: ' + book.rating + ' out of 5'">
-                  {{ book.rating }}/5
+              @if (book.myReadingStatus?.rating != null) {
+                <span class="rating-value" [attr.aria-label]="'Rating: ' + book.myReadingStatus!.rating + ' out of 5'">
+                  {{ book.myReadingStatus!.rating }}/5
                 </span>
               } @else {
                 <span class="empty-value">Not rated</span>
               }
             </td>
             <td class="date-cell">
-              @if (book.dateStarted) {
-                {{ book.dateStarted | date:'medium' }}
+              @if (book.myReadingStatus?.dateStarted) {
+                {{ book.myReadingStatus!.dateStarted | date:'medium' }}
               } @else {
                 <span class="empty-value">Not started</span>
               }
             </td>
             <td class="date-cell">
-              @if (book.dateRead) {
-                {{ book.dateRead | date:'medium' }}
+              @if (book.myReadingStatus?.dateRead) {
+                {{ book.myReadingStatus!.dateRead | date:'medium' }}
               } @else {
                 <span class="empty-value">Not read</span>
               }
             </td>
             <td class="status-cell">
-              <span class="status-badge">{{ bookStatusLabel(book.status) }}</span>
+              <span class="status-badge">{{ bookStatusLabel(book.myReadingStatus?.status ?? BookStatus.NotStarted) }}</span>
             </td>
             <td class="actions-cell">
               <div class="table-actions">
                 <a [routerLink]="['/books', book.id]" class="button button-small">View</a>
-                @if (book.status !== BookStatus.Read) {
+                @if ((book.myReadingStatus?.status ?? BookStatus.NotStarted) !== BookStatus.Read) {
                   <a [routerLink]="['/books', book.id, 'edit']" class="button button-small">Edit</a>
                 }
-                <a [routerLink]="['/books', book.id, 'delete-book']" class="button button-small button-danger">Delete</a>
+                @if (auth.isAdmin()) {
+                  <a [routerLink]="['/books', book.id, 'delete-book']" class="button button-danger">Delete</a>
+                }
               </div>
             </td>
           </tr>

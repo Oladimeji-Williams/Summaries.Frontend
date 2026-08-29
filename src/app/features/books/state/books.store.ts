@@ -1,12 +1,6 @@
 import { computed, inject } from '@angular/core';
 import { signalStore, withState, withComputed, withMethods, patchState } from '@ngrx/signals';
-import {
-  withEntities,
-  setAllEntities,
-  updateEntity,
-  removeEntity,
-  upsertEntity,
-} from '@ngrx/signals/entities';
+import { withEntities, setAllEntities, updateEntity, removeEntity, upsertEntity } from '@ngrx/signals/entities';
 import { firstValueFrom } from 'rxjs';
 
 import { BooksApiService } from '../data-access/books-api.service';
@@ -22,11 +16,7 @@ type BooksState = {
   selectedId: number | null;
 };
 
-const initialState: BooksState = {
-  loading: false,
-  error: null,
-  selectedId: null,
-};
+const initialState: BooksState = { loading: false, error: null, selectedId: null };
 
 export const BooksStore = signalStore(
   { providedIn: 'root' },
@@ -38,17 +28,13 @@ export const BooksStore = signalStore(
     selectedBook: computed(() => entities().find((b) => b.id === selectedId()) ?? null),
   })),
   withMethods((store, booksApi = inject(BooksApiService)) => ({
-    /** List page. */
     async load(): Promise<void> {
       patchState(store, { loading: true, error: null });
       try {
         const books = await firstValueFrom(booksApi.getAll());
         patchState(store, setAllEntities([...books]), { loading: false });
       } catch (err) {
-        patchState(store, {
-          error: getApiErrorMessage(err, 'Unable to load books.'),
-          loading: false,
-        });
+        patchState(store, { error: getApiErrorMessage(err, 'Unable to load books.'), loading: false });
       }
     },
 
@@ -59,29 +45,23 @@ export const BooksStore = signalStore(
         const book = await firstValueFrom(booksApi.getById(id));
         patchState(store, upsertEntity(book), { loading: false });
       } catch (err) {
-        patchState(store, {
-          error: getApiErrorMessage(err, 'Unable to load the book.'),
-          loading: false,
-        });
+        patchState(store, { error: getApiErrorMessage(err, 'Unable to load the book.'), loading: false });
       }
     },
 
-    /** Details page only — viewing an unstarted book starts it. This is a
-     *  domain rule, so it lives here rather than in the component. */
+    /** Details page only — viewing an unstarted book starts it. */
     async viewBook(id: number): Promise<void> {
       patchState(store, { loading: true, error: null, selectedId: id });
       try {
         let book = await firstValueFrom(booksApi.getById(id));
-        if (book.status === BookStatus.NotStarted) {
+        const status = book.myReadingStatus?.status ?? BookStatus.NotStarted;
+        if (status === BookStatus.NotStarted) {
           await firstValueFrom(booksApi.startReading(id));
           book = await firstValueFrom(booksApi.getById(id));
         }
         patchState(store, upsertEntity(book), { loading: false });
       } catch (err) {
-        patchState(store, {
-          error: getApiErrorMessage(err, 'Unable to load the book.'),
-          loading: false,
-        });
+        patchState(store, { error: getApiErrorMessage(err, 'Unable to load the book.'), loading: false });
       }
     },
 
@@ -92,10 +72,7 @@ export const BooksStore = signalStore(
         patchState(store, upsertEntity(book), { loading: false });
         return book;
       } catch (err) {
-        patchState(store, {
-          error: getApiErrorMessage(err, 'Unable to create book.'),
-          loading: false,
-        });
+        patchState(store, { error: getApiErrorMessage(err, 'Unable to create book.'), loading: false });
         return null;
       }
     },
@@ -107,10 +84,7 @@ export const BooksStore = signalStore(
         patchState(store, updateEntity({ id, changes: request }), { loading: false });
         return true;
       } catch (err) {
-        patchState(store, {
-          error: getApiErrorMessage(err, 'Unable to update book.'),
-          loading: false,
-        });
+        patchState(store, { error: getApiErrorMessage(err, 'Unable to update book.'), loading: false });
         return false;
       }
     },
@@ -125,26 +99,20 @@ export const BooksStore = signalStore(
         }
         return true;
       } catch (err) {
-        patchState(store, {
-          error: getApiErrorMessage(err, 'Unable to delete book.'),
-          loading: false,
-        });
+        patchState(store, { error: getApiErrorMessage(err, 'Unable to delete book.'), loading: false });
         return false;
       }
     },
 
-    async markAsRead(id: number): Promise<boolean> {
+    async markAsRead(id: number, rating: number | null): Promise<boolean> {
       patchState(store, { loading: true, error: null });
       try {
-        await firstValueFrom(booksApi.markAsRead(id));
+        await firstValueFrom(booksApi.markAsRead(id, { rating }));
         const book = await firstValueFrom(booksApi.getById(id));
         patchState(store, upsertEntity(book), { loading: false });
         return true;
       } catch (err) {
-        patchState(store, {
-          error: getApiErrorMessage(err, 'Unable to mark as read.'),
-          loading: false,
-        });
+        patchState(store, { error: getApiErrorMessage(err, 'Unable to mark as read.'), loading: false });
         return false;
       }
     },

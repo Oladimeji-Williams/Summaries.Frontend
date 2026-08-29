@@ -17,11 +17,13 @@ export class EditBookPage {
 
   readonly id = input.required({ transform: numberAttribute });
 
+  protected readonly currentStatus = computed<BookStatus>(
+    () => this.store.selectedBook()?.myReadingStatus?.status ?? BookStatus.NotStarted,
+  );
+
   protected readonly initialValue = computed<BookFormValue | null>(() => {
     const book = this.store.selectedBook();
-    return book
-      ? { title: book.title, author: book.author, description: book.description, rating: book.rating }
-      : null;
+    return book ? { title: book.title, author: book.author, description: book.description } : null;
   });
 
   constructor() {
@@ -31,19 +33,15 @@ export class EditBookPage {
   }
 
   async onSave(value: BookFormValue): Promise<void> {
-    const book = this.store.selectedBook();
-    if (!book) return;
-
     const success = await this.store.update(this.id(), {
       title: value.title,
       author: value.author,
       description: value.description,
-      rating: value.rating,
     });
     if (!success) return;
 
-    if (value.status === BookStatus.Read && book.status !== BookStatus.Read) {
-      await this.store.markAsRead(this.id());
+    if (value.status === BookStatus.Read) {
+      await this.store.markAsRead(this.id(), value.rating ?? null);
     }
 
     void this.router.navigate(['/books', this.id()]);

@@ -1,0 +1,23 @@
+<section class="admin-page">
+  @if (loading()) { <p>Loading...</p> }
+  @if (error(); as err) { <p class="error">{{ err }}</p> }
+  @if (history(); as h) {
+    <h1>{{ h.firstName }} {{ h.lastName }}</h1>
+    <p>{{ h.email }}</p>
+    <table class="admin-table">
+      <thead><tr><th>Title</th><th>Author</th><th>Status</th><th>Rating</th><th>Started</th><th>Read</th></tr></thead>
+      <tbody>
+        @for (entry of h.books; track entry.bookId) {
+          <tr>
+            <td>{{ entry.title }}</td>
+            <td>{{ entry.author }}</td>
+            <td>{{ bookStatusLabel(entry.status) }}</td>
+            <td>{{ entry.rating ?? '—' }}</td>
+            <td>{{ entry.dateStarted ? (entry.dateStarted | date:'medium') : '—' }}</td>
+            <td>{{ entry.dateRead ? (entry.dateRead | date:'medium') : '—' }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</section>

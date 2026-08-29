@@ -4,6 +4,6 @@ export interface BookFormValue {
   readonly title: string;
   readonly author: string;
   readonly description: string;
-  readonly rating: number | null;
   readonly status?: BookStatus;
+  readonly rating?: number | null;
 }

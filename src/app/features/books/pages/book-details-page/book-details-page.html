@@ -8,9 +8,7 @@
   </header>
 
   @if (loading()) {
-    <section class="state">
-      <p>Loading book...</p>
-    </section>
+    <section class="state"><p>Loading book...</p></section>
   }
 
   @if (error(); as errorMessage) {
@@ -36,8 +34,8 @@
       <section class="book-metadata">
         <div class="metadata-item">
           <span class="metadata-label">Rating</span>
-          @if (book.rating !== null) {
-            <span class="metadata-value">{{ book.rating }}/1</span>
+          @if (book.myReadingStatus?.rating != null) {
+            <span class="metadata-value">{{ book.myReadingStatus!.rating }}/5</span>
           } @else {
             <span class="metadata-value empty-value">Not rated</span>
           }
@@ -45,8 +43,8 @@
 
         <div class="metadata-item">
           <span class="metadata-label">Date started</span>
-          @if (book.dateStarted) {
-            <span class="metadata-value">{{ book.dateStarted | date:'medium' }}</span>
+          @if (book.myReadingStatus?.dateStarted) {
+            <span class="metadata-value">{{ book.myReadingStatus!.dateStarted | date:'medium' }}</span>
           } @else {
             <span class="metadata-value empty-value">Not started</span>
           }
@@ -54,8 +52,8 @@
 
         <div class="metadata-item">
           <span class="metadata-label">Date read</span>
-          @if (book.dateRead) {
-            <span class="metadata-value">{{ book.dateRead | date:'medium' }}</span>
+          @if (book.myReadingStatus?.dateRead) {
+            <span class="metadata-value">{{ book.myReadingStatus!.dateRead | date:'medium' }}</span>
           } @else {
             <span class="metadata-value empty-value">Not read</span>
           }
@@ -63,19 +61,22 @@
 
         <div class="metadata-item">
           <span class="metadata-label">Status</span>
-          <span class="status-badge">{{ bookStatusLabel(book.status) }}</span>
+          <span class="status-badge">
+            {{ bookStatusLabel(book.myReadingStatus?.status ?? BookStatus.NotStarted) }}
+          </span>
         </div>
       </section>
 
       <footer class="actions">
-        @if (book.status !== BookStatus.Read) {
-          <a [routerLink]="['/books', book.id, 'edit']" class="button button-primary">
-            Edit book
-          </a>
+        @if ((book.myReadingStatus?.status ?? BookStatus.NotStarted) !== BookStatus.Read) {
+          <a [routerLink]="['/books', book.id, 'edit']" class="button button-primary">Edit book</a>
         }
-        <a [routerLink]="['/books', book.id, 'delete-book']" class="button button-danger">
-          Delete Book
-        </a>
+        @if (auth.isAdmin()) {
+          <a [routerLink]="['/books', book.id, 'delete-book']" class="button button-danger">Delete Book</a>
+        }
+        @if (auth.isAdmin()) {
+          <a [routerLink]="['/admin/books', book.id, 'readers']" class="button">View readers</a>
+        }
         <a routerLink="/books" class="button">Back</a>
       </footer>
     </article>

@@ -1,1 +1,6 @@
-<p>navigation works!</p>
+<nav class="site-nav">
+  <a routerLink="/books" routerLinkActive="active">Books</a>
+  @if (auth.isAdmin()) {
+    <a routerLink="/admin/users" routerLinkActive="active">Admin</a>
+  }
+</nav>

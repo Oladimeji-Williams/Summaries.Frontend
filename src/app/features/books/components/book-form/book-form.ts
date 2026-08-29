@@ -2,8 +2,7 @@ import { Component, effect, inject, input, output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { trimmedRequired } from '../../validators/book-form.validators';
-import { BookStatus } from '../../models/book-status.model';
-import { BookFormValue } from '../../models/book-form-value.model';
+import { BookStatus, BookFormValue, bookStatusLabel } from '../../models';
 
 @Component({
   selector: 'app-book-form',
@@ -19,22 +18,20 @@ export class BookForm {
   readonly submitLabel = input('Save');
   readonly submittingLabel = input('Saving...');
   readonly cancelLink = input('/books');
-
-  /** Pass the book's current status to show a status field at all (edit page only). */
   readonly currentStatus = input<BookStatus | null>(null);
-  /** Only InProgress books allow choosing a new status (-> Read). */
   readonly statusEditable = input(false);
 
   readonly save = output<BookFormValue>();
 
   protected readonly BookStatus = BookStatus;
+  protected readonly bookStatusLabel = bookStatusLabel;
 
   readonly form = this.fb.nonNullable.group({
     title: ['', [trimmedRequired(), Validators.maxLength(200)]],
     author: ['', [trimmedRequired(), Validators.maxLength(200)]],
     description: ['', [trimmedRequired(), Validators.maxLength(5000)]],
-    rating: [null as number | null, [Validators.min(0), Validators.max(1)]],
     status: [BookStatus.InProgress as BookStatus],
+    rating: [null as number | null, [Validators.min(0), Validators.max(5)]],
   });
 
   constructor() {
@@ -48,6 +45,10 @@ export class BookForm {
     });
   }
 
+  protected get wantsToMarkAsRead(): boolean {
+    return this.form.controls.status.value === BookStatus.Read;
+  }
+
   submit(): void {
     if (this.form.invalid || this.submitting()) {
       this.form.markAllAsTouched();
@@ -58,8 +59,7 @@ export class BookForm {
       title: raw.title.trim(),
       author: raw.author.trim(),
       description: raw.description.trim(),
-      rating: raw.rating === null || raw.rating === undefined ? null : Number(raw.rating.toFixed(2)),
-      ...(this.statusEditable() ? { status: raw.status } : {}),
+      ...(this.statusEditable() ? { status: raw.status, rating: raw.rating } : {}),
     });
   }
 }

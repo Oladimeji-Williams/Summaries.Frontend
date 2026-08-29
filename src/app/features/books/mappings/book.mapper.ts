@@ -1,15 +1,19 @@
-import { Book } from '../models/book.model';
+import { Book, ReadingStatus } from '../models/book.model';
 import { BookStatus } from '../models/book-status.model';
+
+export interface ReadingStatusApiResponse {
+  status: BookStatus | number;
+  rating: number | null;
+  dateStarted: string | null;
+  dateRead: string | null;
+}
 
 export interface BookApiResponse {
   id: number;
   title: string;
   author: string;
   description: string;
-  rating: number | null;
-  dateStarted: string | null;
-  dateRead: string | null;
-  status: BookStatus | number;
+  myReadingStatus: ReadingStatusApiResponse | null;
 }
 
 const STATUS_BY_ORDINAL: Record<number, BookStatus> = {
@@ -24,15 +28,22 @@ function mapStatus(status: BookStatus | number): BookStatus {
     : status;
 }
 
+function mapReadingStatus(response: ReadingStatusApiResponse | null): ReadingStatus | null {
+  if (!response) return null;
+  return {
+    status: mapStatus(response.status),
+    rating: response.rating,
+    dateStarted: response.dateStarted,
+    dateRead: response.dateRead,
+  };
+}
+
 export function mapBookResponse(response: BookApiResponse): Book {
   return {
     id: response.id,
     title: response.title,
     author: response.author,
     description: response.description,
-    rating: response.rating,
-    dateStarted: response.dateStarted,
-    dateRead: response.dateRead,
-    status: mapStatus(response.status),
+    myReadingStatus: mapReadingStatus(response.myReadingStatus),
   };
 }

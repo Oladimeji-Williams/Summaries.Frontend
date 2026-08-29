@@ -1,0 +1,20 @@
+<section class="admin-page">
+  <h1>Users</h1>
+  @if (loading()) { <p>Loading...</p> }
+  @if (error(); as err) { <p class="error">{{ err }}</p> }
+  @if (!loading() && !error()) {
+    <table class="admin-table">
+      <thead><tr><th>Name</th><th>Email</th><th>Joined</th><th></th></tr></thead>
+      <tbody>
+        @for (user of users(); track user.id) {
+          <tr>
+            <td>{{ user.firstName }} {{ user.lastName }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.createdAtUtc | date:'mediumDate' }}</td>
+            <td><a [routerLink]="['/admin/users', user.id]">View reading history</a></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</section>

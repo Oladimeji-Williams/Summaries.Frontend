@@ -27,7 +27,9 @@
           <span>Table</span>
         </button>
       </div>
-      <a routerLink="/books/create" class="button button-primary">Add book</a>
+      @if (auth.isAdmin()) {
+        <a routerLink="/books/create" class="button button-primary">Add book</a>
+      }
     </div>
   </header>
 

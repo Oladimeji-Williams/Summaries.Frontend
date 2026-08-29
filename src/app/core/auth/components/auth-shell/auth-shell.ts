@@ -16,6 +16,8 @@ export class AuthShell {
   readonly submitting = input(false);
   readonly submitLabel = input('Submit');
   readonly submittingLabel = input('Submitting...');
+  readonly extraLinkText = input('');
+  readonly extraLinkPath = input('/');
   readonly switchPrompt = input('');
   readonly switchLinkText = input('');
   readonly switchLinkPath = input('/');

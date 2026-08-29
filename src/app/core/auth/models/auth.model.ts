@@ -27,3 +27,38 @@ export interface UserProfile {
   readonly lastName: string;
   readonly createdAtUtc: string;
 }
+
+export interface AuthResult {
+  readonly accessToken: string;
+  readonly refreshToken: string;
+  readonly accessTokenExpiresAtUtc: string;
+  readonly refreshTokenExpiresAtUtc: string;
+  readonly userId: string;
+  readonly email: string;
+  readonly displayName: string;
+  readonly roles: readonly string[];
+}
+
+export interface ForgotPasswordRequest {
+  readonly email: string;
+}
+
+export interface ForgotPasswordResult {
+  readonly resetToken: string | null;
+}
+
+export interface ResetPasswordRequest {
+  readonly email: string;
+  readonly token: string;
+  readonly newPassword: string;
+}
+
+export interface ChangePasswordRequest {
+  readonly currentPassword: string;
+  readonly newPassword: string;
+}
+
+export interface UpdateProfileRequest {
+  readonly firstName: string;
+  readonly lastName: string;
+}

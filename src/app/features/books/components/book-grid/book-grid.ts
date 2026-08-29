@@ -1,6 +1,7 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Book, BookStatus } from '../../models';
+import { AuthStore } from '../../../../core/auth/state/auth.store';
 
 @Component({
   selector: 'app-book-grid',
@@ -11,4 +12,5 @@ import { Book, BookStatus } from '../../models';
 export class BookGrid {
   readonly books = input.required<readonly Book[]>();
   protected readonly BookStatus = BookStatus;
+  protected readonly auth = inject(AuthStore);
 }

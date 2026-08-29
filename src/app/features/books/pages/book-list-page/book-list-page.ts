@@ -2,6 +2,7 @@ import { Component, OnInit, PLATFORM_ID, inject, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { BooksStore } from '../../state/books.store';
+import { AuthStore } from '../../../../core/auth/state/auth.store';
 import { BookViewMode } from '../../models';
 import { BookGrid } from '../../components/book-grid/book-grid';
 import { BookTable } from '../../components/book-table/book-table';
@@ -14,6 +15,7 @@ import { BookTable } from '../../components/book-table/book-table';
 })
 export class BookListPage implements OnInit {
   readonly state = inject(BooksStore);
+  protected readonly auth = inject(AuthStore);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly viewModeStorageKey = 'summaries.books.view-mode';
 

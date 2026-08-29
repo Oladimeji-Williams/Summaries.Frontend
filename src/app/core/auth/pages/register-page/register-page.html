@@ -45,4 +45,15 @@
       <p class="validation-error">Password must be at least 12 characters.</p>
     }
   </div>
+
+  <div class="form-field">
+    <label for="confirmPassword">Confirm password</label>
+    <input id="confirmPassword" type="password" [formControl]="form.controls.confirmPassword" autocomplete="new-password" />
+    @if (form.controls.confirmPassword.touched && form.controls.confirmPassword.hasError('required')) {
+      <p class="validation-error">Please confirm your password.</p>
+    }
+    @if (form.controls.confirmPassword.touched && form.controls.confirmPassword.hasError('mismatch')) {
+      <p class="validation-error">Passwords do not match.</p>
+    }
+  </div>
 </app-auth-shell>

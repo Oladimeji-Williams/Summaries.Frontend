@@ -57,3 +57,14 @@ form {
     font-weight: 600;
   }
 }
+
+.auth-extra-link {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+
+  a {
+    color: #666;
+    text-decoration: underline;
+  }
+}

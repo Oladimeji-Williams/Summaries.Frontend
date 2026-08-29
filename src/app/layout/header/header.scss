@@ -1,0 +1,14 @@
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #111;
+  text-decoration: none;
+}

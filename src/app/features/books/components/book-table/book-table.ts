@@ -1,7 +1,8 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Book, BookStatus, bookStatusLabel } from '../../models';
+import { AuthStore } from '../../../../core/auth/state/auth.store';
 
 @Component({
   selector: 'app-book-table',
@@ -13,4 +14,5 @@ export class BookTable {
   readonly books = input.required<readonly Book[]>();
   protected readonly BookStatus = BookStatus;
   protected readonly bookStatusLabel = bookStatusLabel;
+  protected readonly auth = inject(AuthStore);
 }

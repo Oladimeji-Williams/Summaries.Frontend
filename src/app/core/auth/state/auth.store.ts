@@ -15,6 +15,7 @@ type AuthState = {
   userId: string | null;
   email: string | null;
   displayName: string | null;
+  roles: readonly string[];
   loading: boolean;
   error: string | null;
 };
@@ -26,6 +27,7 @@ const initialState: AuthState = {
   userId: null,
   email: null,
   displayName: null,
+  roles: [],
   loading: false,
   error: null,
 };
@@ -33,8 +35,9 @@ const initialState: AuthState = {
 export const AuthStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
-  withComputed(({ accessToken }) => ({
+  withComputed(({ accessToken, roles }) => ({
     isAuthenticated: computed(() => accessToken() !== null),
+    isAdmin: computed(() => roles().includes('Admin')),
   })),
   withMethods((store, authApi = inject(AuthApiService), platformId = inject(PLATFORM_ID)) => {
     function persist(result: AuthResult | null): void {
@@ -54,6 +57,7 @@ export const AuthStore = signalStore(
         userId: result.userId,
         email: result.email,
         displayName: result.displayName,
+        roles: result.roles,
         loading: false,
         error: null,
       });
@@ -77,6 +81,7 @@ export const AuthStore = signalStore(
           userId: result.userId,
           email: result.email,
           displayName: result.displayName,
+          roles: result.roles,
         });
       },
 
@@ -128,6 +133,16 @@ export const AuthStore = signalStore(
           } catch {
             // best-effort — session is already cleared client-side regardless
           }
+        }
+      },
+      updateDisplayName(firstName: string, lastName: string): void {
+        const displayName = `${firstName} ${lastName}`;
+        patchState(store, { displayName });
+
+        const raw = platformId && isPlatformBrowser(platformId) ? localStorage.getItem(STORAGE_KEY) : null;
+        if (raw) {
+          const stored = JSON.parse(raw);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...stored, displayName }));
         }
       },
     };

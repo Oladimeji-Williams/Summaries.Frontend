@@ -2,8 +2,8 @@ import { Component, effect, inject, input, numberAttribute } from '@angular/core
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { BooksStore } from '../../state/books.store';
-import { BookStatus } from '../../models/book-status.model';
-import { bookStatusLabel } from '../../models/book-status.util';
+import { AuthStore } from '../../../../core/auth/state/auth.store';
+import { BookStatus, bookStatusLabel } from '../../models';
 
 @Component({
   selector: 'app-book-details-page',
@@ -13,6 +13,7 @@ import { bookStatusLabel } from '../../models/book-status.util';
 })
 export class BookDetailsPage {
   private readonly store = inject(BooksStore);
+  protected readonly auth = inject(AuthStore);
 
   readonly id = input.required({ transform: numberAttribute });
 

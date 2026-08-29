@@ -3,7 +3,17 @@ import { map, Observable } from 'rxjs';
 import { ApiClient } from '../../../infrastructure/api/api-client';
 import { API_CONFIG } from '../../config/api-config';
 import { ApiResponse } from '../../../infrastructure/api/api-response';
-import { AuthResult, LoginRequest, RegisterRequest, UserProfile } from '../models/auth.model';
+import {
+  AuthResult,
+  LoginRequest,
+  RegisterRequest,
+  UserProfile,
+  ForgotPasswordRequest,
+  ForgotPasswordResult,
+  ResetPasswordRequest,
+  ChangePasswordRequest,
+  UpdateProfileRequest,
+} from '../models/auth.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthApiService {
@@ -37,5 +47,23 @@ export class AuthApiService {
     return this.api
       .get<ApiResponse<UserProfile>>(`${this.config.baseUrl}/v1/users/me`)
       .pipe(map((r) => r.data));
+  }
+
+  forgotPassword(request: ForgotPasswordRequest): Observable<ForgotPasswordResult> {
+    return this.api
+      .post<ForgotPasswordRequest, ApiResponse<ForgotPasswordResult>>(`${this.endpoint}/forgot-password`, request)
+      .pipe(map((r) => r.data));
+  }
+
+  resetPassword(request: ResetPasswordRequest): Observable<void> {
+    return this.api.post<ResetPasswordRequest, void>(`${this.endpoint}/reset-password`, request);
+  }
+
+  changePassword(request: ChangePasswordRequest): Observable<void> {
+    return this.api.post<ChangePasswordRequest, void>(`${this.endpoint}/change-password`, request);
+  }
+
+  updateProfile(request: UpdateProfileRequest): Observable<void> {
+    return this.api.put<UpdateProfileRequest, void>(`${this.config.baseUrl}/v1/users/me`, request);
   }
 }
