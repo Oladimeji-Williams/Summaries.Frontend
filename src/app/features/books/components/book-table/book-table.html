@@ -22,13 +22,7 @@
             <td class="author-cell">{{ book.author }}</td>
             <td class="description-cell">{{ book.description }}</td>
             <td class="rating-cell">
-              @if (book.myReadingStatus?.rating != null) {
-                <span class="rating-value" [attr.aria-label]="'Rating: ' + book.myReadingStatus!.rating + ' out of 5'">
-                  {{ book.myReadingStatus!.rating }}/5
-                </span>
-              } @else {
-                <span class="empty-value">Not rated</span>
-              }
+              <app-rating-bar [rating]="book.myReadingStatus?.rating ?? null" />
             </td>
             <td class="date-cell">
               @if (book.myReadingStatus?.dateStarted) {

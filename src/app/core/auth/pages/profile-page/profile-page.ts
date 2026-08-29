@@ -23,6 +23,8 @@ export class ProfilePage implements OnInit {
   protected readonly error = signal<string | null>(null);
   protected readonly editing = signal(false);
   protected readonly saving = signal(false);
+  protected readonly uploading = signal(false);
+  protected readonly uploadError = signal<string | null>(null);
 
   protected readonly initials = computed(() => {
     const p = this.profile();
@@ -84,6 +86,26 @@ export class ProfilePage implements OnInit {
       error: (err) => {
         this.saving.set(false);
         this.error.set(getApiErrorMessage(err, 'Unable to update profile.'));
+      },
+    });
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    this.uploading.set(true);
+    this.uploadError.set(null);
+    this.authApi.uploadAvatar(file).subscribe({
+      next: (avatarUrl) => {
+        this.uploading.set(false);
+        this.authStore.updateAvatar(avatarUrl);
+        this.loadProfile();
+      },
+      error: (err) => {
+        this.uploading.set(false);
+        this.uploadError.set(getApiErrorMessage(err, 'Unable to upload image.'));
       },
     });
   }

@@ -34,11 +34,7 @@
       <section class="book-metadata">
         <div class="metadata-item">
           <span class="metadata-label">Rating</span>
-          @if (book.myReadingStatus?.rating != null) {
-            <span class="metadata-value">{{ book.myReadingStatus!.rating }}/5</span>
-          } @else {
-            <span class="metadata-value empty-value">Not rated</span>
-          }
+          <app-rating-bar [rating]="book.myReadingStatus?.rating ?? null" />
         </div>
 
         <div class="metadata-item">

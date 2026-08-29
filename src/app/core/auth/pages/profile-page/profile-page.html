@@ -7,7 +7,20 @@
   }
   @if (profile(); as p) {
     <article class="profile-card">
-      <div class="avatar">{{ initials() }}</div>
+      <div class="avatar-wrapper">
+        @if (profile()?.avatarUrl; as url) {
+          <img [src]="url" alt="Profile picture" class="avatar-img" />
+        } @else {
+          <div class="avatar">{{ initials() }}</div>
+        }
+        <label class="avatar-upload-label">
+          @if (uploading()) { Uploading... } @else { Change photo }
+          <input type="file" accept="image/jpeg,image/png,image/webp" (change)="onFileSelected($event)" hidden />
+        </label>
+        @if (uploadError(); as err) {
+          <p class="validation-error">{{ err }}</p>
+        }
+      </div>
 
       @if (!editing()) {
         <h1>{{ p.firstName }} {{ p.lastName }}</h1>

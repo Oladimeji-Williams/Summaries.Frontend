@@ -1,0 +1,12 @@
+@if (rating() != null) {
+  <div class="rating-bar" [attr.aria-label]="'Rating: ' + rating() + ' out of ' + max()">
+    @for (fill of segments(); track $index) {
+      <span class="segment">
+        <span class="segment-fill" [style.width.%]="fill"></span>
+      </span>
+    }
+  </div>
+  <span class="rating-number">{{ rating() }}/{{ max() }}</span>
+} @else {
+  <span class="empty-value">Not rated</span>
+}

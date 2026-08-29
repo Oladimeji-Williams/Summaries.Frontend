@@ -55,4 +55,8 @@ export class ApiClient {
   ): Observable<T> {
     return this.http.delete<T>(url);
   }
+
+  postFormData<TResponse>(url: string, formData: FormData): Observable<TResponse> {
+    return this.http.post<TResponse>(url, formData);
+  }
 }

@@ -15,6 +15,7 @@ type AuthState = {
   userId: string | null;
   email: string | null;
   displayName: string | null;
+  avatarUrl: string | null;
   roles: readonly string[];
   loading: boolean;
   error: string | null;
@@ -27,6 +28,7 @@ const initialState: AuthState = {
   userId: null,
   email: null,
   displayName: null,
+  avatarUrl: null,
   roles: [],
   loading: false,
   error: null,
@@ -58,6 +60,7 @@ export const AuthStore = signalStore(
         email: result.email,
         displayName: result.displayName,
         roles: result.roles,
+        avatarUrl: result.avatarUrl,
         loading: false,
         error: null,
       });
@@ -82,7 +85,13 @@ export const AuthStore = signalStore(
           email: result.email,
           displayName: result.displayName,
           roles: result.roles,
+          avatarUrl: result.avatarUrl,
         });
+
+        const rawParsed = JSON.parse(raw);
+        if (rawParsed.avatarUrl) {
+          patchState(store, { avatarUrl: rawParsed.avatarUrl });
+        }
       },
 
       async register(request: RegisterRequest): Promise<boolean> {
@@ -135,14 +144,27 @@ export const AuthStore = signalStore(
           }
         }
       },
+
       updateDisplayName(firstName: string, lastName: string): void {
         const displayName = `${firstName} ${lastName}`;
         patchState(store, { displayName });
+        if (isPlatformBrowser(platformId)) {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const stored = JSON.parse(raw);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...stored, displayName }));
+          }
+        }
+      },
 
-        const raw = platformId && isPlatformBrowser(platformId) ? localStorage.getItem(STORAGE_KEY) : null;
-        if (raw) {
-          const stored = JSON.parse(raw);
-          localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...stored, displayName }));
+      updateAvatar(avatarUrl: string): void {
+        patchState(store, { avatarUrl });
+        if (isPlatformBrowser(platformId)) {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const stored = JSON.parse(raw);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...stored, avatarUrl }));
+          }
         }
       },
     };

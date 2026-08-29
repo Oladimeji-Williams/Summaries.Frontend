@@ -66,4 +66,12 @@ export class AuthApiService {
   updateProfile(request: UpdateProfileRequest): Observable<void> {
     return this.api.put<UpdateProfileRequest, void>(`${this.config.baseUrl}/v1/users/me`, request);
   }
+
+  uploadAvatar(file: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.api
+      .postFormData<ApiResponse<string>>(`${this.config.baseUrl}/v1/users/me/avatar`, formData)
+      .pipe(map((r) => r.data));
+  }
 }

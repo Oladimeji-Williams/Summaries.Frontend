@@ -1,6 +1,13 @@
 @if (store.isAuthenticated()) {
   <div class="auth-status">
-    <a routerLink="/profile" class="auth-name">{{ store.displayName() }}</a>
+    <a routerLink="/profile" class="avatar-link" [title]="store.displayName()">
+      @if (store.avatarUrl(); as url) {
+        <img [src]="url" [alt]="store.displayName()" class="avatar-img" />
+      } @else {
+        <span class="avatar-initials">{{ initials }}</span>
+      }
+      <span class="hover-name">{{ store.displayName() }}</span>
+    </a>
     <button type="button" class="button-link" (click)="logout()">Log out</button>
   </div>
 } @else {

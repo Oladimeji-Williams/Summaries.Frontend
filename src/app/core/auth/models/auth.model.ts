@@ -26,6 +26,7 @@ export interface UserProfile {
   readonly firstName: string;
   readonly lastName: string;
   readonly createdAtUtc: string;
+  readonly avatarUrl: string | null;
 }
 
 export interface AuthResult {
@@ -37,6 +38,7 @@ export interface AuthResult {
   readonly email: string;
   readonly displayName: string;
   readonly roles: readonly string[];
+  readonly avatarUrl: string | null;
 }
 
 export interface ForgotPasswordRequest {
