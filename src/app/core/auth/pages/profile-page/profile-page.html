@@ -13,10 +13,17 @@
         } @else {
           <div class="avatar">{{ initials() }}</div>
         }
-        <label class="avatar-upload-label">
-          @if (uploading()) { Uploading... } @else { Change photo }
-          <input type="file" accept="image/jpeg,image/png,image/webp" (change)="onFileSelected($event)" hidden />
-        </label>
+        <div class="avatar-actions">
+          <label class="avatar-upload-label">
+            @if (uploading()) { Uploading... } @else { Change photo }
+            <input type="file" accept="image/jpeg,image/png,image/webp" (change)="onFileSelected($event)" hidden />
+          </label>
+          @if (profile()?.avatarUrl) {
+            <button type="button" class="avatar-remove-label" [disabled]="removing()" (click)="removeAvatar()">
+              @if (removing()) { Removing... } @else { Remove photo }
+            </button>
+          }
+        </div>
         @if (uploadError(); as err) {
           <p class="validation-error">{{ err }}</p>
         }
@@ -25,14 +32,12 @@
       @if (!editing()) {
         <h1>{{ p.firstName }} {{ p.lastName }}</h1>
         <p class="email">{{ p.email }}</p>
-
         <dl class="profile-meta">
           <div class="meta-row">
             <dt>Member since</dt>
             <dd>{{ p.createdAtUtc | date:'longDate' }}</dd>
           </div>
         </dl>
-
         <div class="profile-actions">
           <button type="button" class="button" (click)="startEditing()">Edit details</button>
           <a routerLink="/change-password" class="button">Change password</a>
@@ -54,7 +59,6 @@
               <p class="validation-error">Last name is required.</p>
             }
           </div>
-
           <div class="profile-actions">
             <button type="button" class="button" (click)="cancelEditing()" [disabled]="saving()">Cancel</button>
             <button type="submit" class="button button-primary" [disabled]="saving()">
@@ -66,3 +70,6 @@
     </article>
   }
 </section>
+@if (showCropper()) {
+  <app-avatar-cropper [file]="selectedFile()!" (cropped)="onCropSaved($event)" (cancelled)="onCropCancelled()" />
+}

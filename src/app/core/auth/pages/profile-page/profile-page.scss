@@ -108,3 +108,25 @@ h1 { margin: 0 0 0.25rem; }
   text-decoration: underline;
   cursor: pointer;
 }
+
+.avatar-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.avatar-remove-label {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #b42318;
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}

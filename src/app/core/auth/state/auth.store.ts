@@ -167,6 +167,17 @@ export const AuthStore = signalStore(
           }
         }
       },
+
+      clearAvatar(): void {
+        patchState(store, { avatarUrl: null });
+        if (isPlatformBrowser(platformId)) {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const stored = JSON.parse(raw);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...stored, avatarUrl: null }));
+          }
+        }
+      },
     };
   }),
 );

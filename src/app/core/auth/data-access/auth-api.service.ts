@@ -74,4 +74,8 @@ export class AuthApiService {
       .postFormData<ApiResponse<string>>(`${this.config.baseUrl}/v1/users/me/avatar`, formData)
       .pipe(map((r) => r.data));
   }
+
+  removeAvatar(): Observable<void> {
+    return this.api.delete<void>(`${this.config.baseUrl}/v1/users/me/avatar`);
+  }
 }
