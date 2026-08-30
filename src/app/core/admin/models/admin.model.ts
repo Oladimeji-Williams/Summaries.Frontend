@@ -43,3 +43,26 @@ export interface BookReaders {
   readonly author: string;
   readonly readers: readonly ReaderEntry[];
 }
+
+export interface BookReadingEntry {
+  readonly bookId: number;
+  readonly title: string;
+  readonly author: string;
+  readonly status: BookStatus;
+  readonly rating: number | null;
+  readonly dateStarted: string | null;
+  readonly dateRead: string | null;
+  readonly readingDurationHours: number | null;
+}
+
+export interface ReaderEntry {
+  readonly userId: string;
+  readonly email: string;
+  readonly firstName: string;
+  readonly lastName: string;
+  readonly status: BookStatus;
+  readonly rating: number | null;
+  readonly dateStarted: string | null;
+  readonly dateRead: string | null;
+  readonly readingDurationHours: number | null;
+}

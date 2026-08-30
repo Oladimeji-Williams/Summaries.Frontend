@@ -1,0 +1,40 @@
+.sort-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.sort-toggle {
+  display: inline-flex;
+  padding: 0.1rem;
+  border: 0;
+  background: none;
+  color: #999;
+  cursor: pointer;
+  border-radius: 0.2rem;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: #555;
+  }
+}
+
+.sort-priority {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #0d6efd;
+}
+
+.sort-clear {
+  padding: 0 0.15rem;
+  border: 0;
+  background: none;
+  color: #bbb;
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+
+  &:hover {
+    color: #b42318;
+  }
+}

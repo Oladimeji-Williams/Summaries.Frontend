@@ -284,4 +284,30 @@
   }
 }
 
+.book-table {
+  th,
+  td {
+    border-right: 1px solid #eee;
 
+    &:last-child {
+      border-right: none;
+    }
+  }
+
+  tbody tr:hover {
+    background: #f7f7f7;
+  }
+}
+
+.col-header {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.col-label {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 0.8rem;
+}

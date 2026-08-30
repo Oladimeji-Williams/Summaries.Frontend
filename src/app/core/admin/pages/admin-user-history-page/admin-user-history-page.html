@@ -5,9 +5,38 @@
     <h1>{{ h.firstName }} {{ h.lastName }}</h1>
     <p>{{ h.email }}</p>
     <table class="admin-table">
-      <thead><tr><th>Title</th><th>Author</th><th>Status</th><th>Rating</th><th>Started</th><th>Read</th></tr></thead>
+      <thead>
+        <tr>
+          @for (col of ['title','author','status','rating','started','read','duration']; track col) {
+            <th>
+              <div class="col-header">
+                <span class="col-label">
+                  @switch (col) {
+                    @case ('title') { Title } @case ('author') { Author } @case ('status') { Status }
+                    @case ('rating') { Rating } @case ('started') { Started } @case ('read') { Read }
+                    @case ('duration') { Reading time }
+                  }
+                </span>
+                <app-sort-indicator
+                  [direction]="table.sortDirectionFor(col)"
+                  [priority]="table.sortPriority(col)"
+                  [showPriority]="table.hasAnySort()"
+                  (sortClick)="table.toggleSort(col)"
+                  (clearClick)="table.clearSort(col)"
+                />
+                <app-column-filter
+                  [values]="table.uniqueValues(col)"
+                  [selected]="table.activeFilterFor(col)"
+                  (apply)="table.setFilter(col, $event)"
+                  (clear)="table.clearFilter(col)"
+                />
+              </div>
+            </th>
+          }
+        </tr>
+      </thead>
       <tbody>
-        @for (entry of h.books; track entry.bookId) {
+        @for (entry of table.rowsView(); track entry.bookId) {
           <tr>
             <td>{{ entry.title }}</td>
             <td>{{ entry.author }}</td>
@@ -15,6 +44,7 @@
             <td>{{ entry.rating ?? '—' }}</td>
             <td>{{ entry.dateStarted ? (entry.dateStarted | date:'medium') : '—' }}</td>
             <td>{{ entry.dateRead ? (entry.dateRead | date:'medium') : '—' }}</td>
+            <td>{{ formatReadingDuration(entry.readingDurationHours) }}</td>
           </tr>
         }
       </tbody>

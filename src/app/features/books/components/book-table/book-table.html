@@ -3,18 +3,120 @@
     <table class="book-table">
       <thead>
         <tr>
-          <th scope="col">Title</th>
-          <th scope="col">Author</th>
-          <th scope="col">Description</th>
-          <th scope="col">Rating</th>
-          <th scope="col">Started</th>
-          <th scope="col">Read</th>
-          <th scope="col">Status</th>
-          <th scope="col" class="actions-column">Actions</th>
+          <th>
+            <div class="col-header">
+              <span class="col-label">Title</span>
+              <app-sort-indicator
+                [direction]="table.sortDirectionFor('title')"
+                [priority]="table.sortPriority('title')"
+                [showPriority]="table.hasAnySort()"
+                (sortClick)="table.toggleSort('title')"
+                (clearClick)="table.clearSort('title')"
+              />
+              <app-column-filter
+                [values]="table.uniqueValues('title')"
+                [selected]="table.activeFilterFor('title')"
+                (apply)="table.setFilter('title', $event)"
+                (clear)="table.clearFilter('title')"
+              />
+            </div>
+          </th>
+          <th>
+            <div class="col-header">
+              <span class="col-label">Author</span>
+              <app-sort-indicator
+                [direction]="table.sortDirectionFor('author')"
+                [priority]="table.sortPriority('author')"
+                [showPriority]="table.hasAnySort()"
+                (sortClick)="table.toggleSort('author')"
+                (clearClick)="table.clearSort('author')"
+              />
+              <app-column-filter
+                [values]="table.uniqueValues('author')"
+                [selected]="table.activeFilterFor('author')"
+                (apply)="table.setFilter('author', $event)"
+                (clear)="table.clearFilter('author')"
+              />
+            </div>
+          </th>
+          <th>
+            <div class="col-header">
+              <span class="col-label">Description</span>
+              <app-sort-indicator
+                [direction]="table.sortDirectionFor('description')"
+                [priority]="table.sortPriority('description')"
+                [showPriority]="table.hasAnySort()"
+                (sortClick)="table.toggleSort('description')"
+                (clearClick)="table.clearSort('description')"
+              />
+              <app-column-filter
+                [values]="table.uniqueValues('description')"
+                [selected]="table.activeFilterFor('description')"
+                (apply)="table.setFilter('description', $event)"
+                (clear)="table.clearFilter('description')"
+              />
+            </div>
+          </th>
+          <th>
+            <div class="col-header">
+              <span class="col-label">Started</span>
+              <app-sort-indicator
+                [direction]="table.sortDirectionFor('started')"
+                [priority]="table.sortPriority('started')"
+                [showPriority]="table.hasAnySort()"
+                (sortClick)="table.toggleSort('started')"
+                (clearClick)="table.clearSort('started')"
+              />
+              <app-column-filter
+                [values]="table.uniqueValues('started')"
+                [selected]="table.activeFilterFor('started')"
+                (apply)="table.setFilter('started', $event)"
+                (clear)="table.clearFilter('started')"
+              />
+            </div>
+          </th>
+          <th>
+            <div class="col-header">
+              <span class="col-label">Read</span>
+              <app-sort-indicator
+                [direction]="table.sortDirectionFor('read')"
+                [priority]="table.sortPriority('read')"
+                [showPriority]="table.hasAnySort()"
+                (sortClick)="table.toggleSort('read')"
+                (clearClick)="table.clearSort('read')"
+              />
+              <app-column-filter
+                [values]="table.uniqueValues('read')"
+                [selected]="table.activeFilterFor('read')"
+                (apply)="table.setFilter('read', $event)"
+                (clear)="table.clearFilter('read')"
+              />
+            </div>
+          </th>          
+          <th>
+            <div class="col-header">
+              <span class="col-label">Status</span>
+              <app-sort-indicator
+                [direction]="table.sortDirectionFor('status')"
+                [priority]="table.sortPriority('status')"
+                [showPriority]="table.hasAnySort()"
+                (sortClick)="table.toggleSort('status')"
+                (clearClick)="table.clearSort('status')"
+              />
+              <app-column-filter
+                [values]="table.uniqueValues('status')"
+                [selected]="table.activeFilterFor('status')"
+                (apply)="table.setFilter('status', $event)"
+                (clear)="table.clearFilter('status')"
+              />
+            </div>
+          </th>
+
+          <th class="actions-column">Actions</th>
         </tr>
       </thead>
       <tbody>
-        @for (book of books(); track book.id) {
+        @for (book of table.rowsView(); track book.id) {
           <tr>
             <td class="title-cell">
               <a [routerLink]="['/books', book.id]">{{ book.title }}</a>
@@ -48,7 +150,7 @@
                   <a [routerLink]="['/books', book.id, 'edit']" class="button button-small">Edit</a>
                 }
                 @if (auth.isAdmin()) {
-                  <a [routerLink]="['/books', book.id, 'delete-book']" class="button button-danger">Delete</a>
+                  <a [routerLink]="['/books', book.id, 'delete-book']" class="button button-small button-danger">Delete</a>
                 }
               </div>
             </td>

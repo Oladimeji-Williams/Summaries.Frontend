@@ -1,0 +1,52 @@
+<div class="column-filter">
+  <button
+    type="button"
+    class="filter-icon"
+    [class.active]="isActive()"
+    (click)="toggleOpen()"
+    [attr.aria-label]="isActive() ? 'Filter applied — click to change' : 'Filter column'"
+  >
+    <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor">
+      <path d="M0 1.5A.5.5 0 0 1 .5 1h15a.5.5 0 0 1 .5.5v1.128a.5.5 0 0 1-.146.354L10 9.5v4.5a.5.5 0 0 1-.276.447l-3 1.5A.5.5 0 0 1 6 15.5v-6L.146 2.982A.5.5 0 0 1 0 2.628V1.5Z"/>
+    </svg>
+  </button>
+
+  @if (open()) {
+    <div class="filter-backdrop" (click)="close()"></div>
+    <div class="filter-panel">
+      <input
+        type="text"
+        class="filter-search"
+        placeholder="Search..."
+        [value]="search()"
+        (input)="search.set($any($event.target).value)"
+      />
+
+      <div class="filter-actions-row">
+        <button type="button" (click)="selectAll()">Select all</button>
+        <button type="button" (click)="selectNone()">Clear</button>
+      </div>
+
+      <ul class="filter-list">
+        @for (value of filteredValues(); track value) {
+          <li>
+            <label>
+              <input
+                type="checkbox"
+                [checked]="isChecked(value)"
+                (change)="toggleValue(value, $any($event.target).checked)"
+              />
+              {{ value }}
+            </label>
+          </li>
+        }
+      </ul>
+
+      <div class="filter-footer">
+        <button type="button" class="button" (click)="close()">Cancel</button>
+        <button type="button" class="button" (click)="clearFilter()">Clear filter</button>
+        <button type="button" class="button button-primary" (click)="applyFilter()">Apply</button>
+      </div>
+    </div>
+  }
+</div>
