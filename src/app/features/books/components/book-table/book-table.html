@@ -59,6 +59,24 @@
           </th>
           <th>
             <div class="col-header">
+              <span class="col-label">Rating</span>
+              <app-sort-indicator
+                [direction]="table.sortDirectionFor('rating')"
+                [priority]="table.sortPriority('rating')"
+                [showPriority]="table.hasAnySort()"
+                (sortClick)="table.toggleSort('rating')"
+                (clearClick)="table.clearSort('rating')"
+              />
+              <app-column-filter
+                [values]="table.uniqueValues('rating')"
+                [selected]="table.activeFilterFor('rating')"
+                (apply)="table.setFilter('rating', $event)"
+                (clear)="table.clearFilter('rating')"
+              />
+            </div>
+          </th>
+          <th>
+            <div class="col-header">
               <span class="col-label">Started</span>
               <app-sort-indicator
                 [direction]="table.sortDirectionFor('started')"
