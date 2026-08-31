@@ -37,6 +37,8 @@ export class BookTable {
       value: (b) => this.ratingLabel(b),
       sortValue: (b) => b.myReadingStatus?.rating ?? -1,
     },
+    { key: 'genre', label: 'Genre', value: (b) => b.genre ?? '—', sortable: true, filterable: true },
+    { key: 'publisher', label: 'Publisher', value: (b) => b.publisher ?? '—', sortable: true, filterable: true },
     {
       key: 'started', label: 'Started', sortable: true, filterable: true,
       value: (b) => this.dateLabel(b.myReadingStatus?.dateStarted),

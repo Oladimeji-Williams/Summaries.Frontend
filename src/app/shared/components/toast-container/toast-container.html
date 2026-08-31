@@ -1,0 +1,8 @@
+<div class="toast-stack">
+  @for (toast of notifications.toasts(); track toast.id) {
+    <div class="toast" [class.toast-error]="toast.type === 'error'">
+      {{ toast.message }}
+      <button type="button" (click)="notifications.dismiss(toast.id)">×</button>
+    </div>
+  }
+</div>

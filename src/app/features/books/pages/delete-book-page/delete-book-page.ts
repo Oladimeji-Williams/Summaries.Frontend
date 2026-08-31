@@ -1,6 +1,7 @@
 import { Component, effect, inject, input, numberAttribute } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { BooksStore } from '../../state/books.store';
+import { NotificationService } from '../../../../shared/services/notification.service';
 
 @Component({
   selector: 'app-delete-book-page',
@@ -10,6 +11,8 @@ import { BooksStore } from '../../state/books.store';
 })
 export class DeleteBookPage {
   private readonly router = inject(Router);
+  private readonly notifications = inject(NotificationService);
+
   protected readonly store = inject(BooksStore);
 
   readonly id = input.required({ transform: numberAttribute });
@@ -31,6 +34,7 @@ export class DeleteBookPage {
     if (success) {
       void this.router.navigate(['/books']);
     }
+    this.notifications.success('Book deleted successfully.');
   }
 
   cancel(): void {

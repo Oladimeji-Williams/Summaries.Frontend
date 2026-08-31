@@ -31,6 +31,10 @@
 }
 
 .filter-panel {
+  box-sizing: border-box;
+  * {
+    box-sizing: border-box;
+  }
   position: absolute;
   top: 100%;
   left: 0;
@@ -48,6 +52,7 @@
 
 .filter-search {
   width: 100%;
+  box-sizing: border-box;
   padding: 0.4rem 0.6rem;
   margin-bottom: 0.5rem;
   border: 1px solid #ccc;

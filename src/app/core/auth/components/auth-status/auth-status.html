@@ -8,8 +8,19 @@
       }
       <span class="hover-name">{{ store.displayName() }}</span>
     </a>
-    <button type="button" class="button-link" (click)="logout()">Log out</button>
+    <button type="button" class="button-link" (click)="requestLogout()">Log out</button>
   </div>
 } @else {
   <a routerLink="/login" class="button-link">Log in</a>
+}
+
+@if (showLogoutConfirm()) {
+  <app-confirm-dialog
+    title="Log out?"
+    message="You'll need to log in again to access your books."
+    confirmLabel="Log out"
+    [danger]="true"
+    (confirmed)="confirmLogout()"
+    (cancelled)="cancelLogout()"
+  />
 }

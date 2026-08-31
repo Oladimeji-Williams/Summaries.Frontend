@@ -32,6 +32,31 @@
     }
   </div>
 
+  <div class="form-field">
+    <label for="genre">Genre</label>
+    <input id="genre" type="text" formControlName="genre" autocomplete="off" />
+  </div>
+
+  <div class="form-field">
+    <label for="publisher">Publisher</label>
+    <input id="publisher" type="text" formControlName="publisher" autocomplete="off" />
+  </div>
+
+  <div class="form-field">
+    <label for="publishedYear">Published year</label>
+    <input id="publishedYear" type="number" formControlName="publishedYear" />
+  </div>
+
+  <div class="form-field">
+    <label for="isbn">ISBN</label>
+    <input id="isbn" type="text" formControlName="isbn" autocomplete="off" />
+  </div>
+
+  <div class="form-field">
+    <label for="pageCount">Page count</label>
+    <input id="pageCount" type="number" formControlName="pageCount" />
+  </div>
+
   @if (currentStatus() !== null) {
     <div class="form-field">
       <label>Status</label>

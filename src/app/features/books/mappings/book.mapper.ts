@@ -13,6 +13,11 @@ export interface BookApiResponse {
   title: string;
   author: string;
   description: string;
+  isbn: string | null;
+  publisher: string | null;
+  publishedYear: number | null;
+  genre: string | null;
+  pageCount: number | null;
   myReadingStatus: ReadingStatusApiResponse | null;
 }
 
@@ -44,6 +49,11 @@ export function mapBookResponse(response: BookApiResponse): Book {
     title: response.title,
     author: response.author,
     description: response.description,
+    isbn: response.isbn,
+    publisher: response.publisher,
+    publishedYear: response.publishedYear,
+    genre: response.genre,
+    pageCount: response.pageCount,
     myReadingStatus: mapReadingStatus(response.myReadingStatus),
   };
 }

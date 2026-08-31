@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, signal, viewChild } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -7,6 +7,7 @@ import { AuthStore } from '../../state/auth.store';
 import { UserProfile } from '../../models/auth.model';
 import { getApiErrorMessage } from '../../../../infrastructure/api/api-error.util';
 import { AvatarCropper, CropResult } from '../../components/avatar-cropper/avatar-cropper';
+import { NotificationService } from '../../../../shared/services/notification.service';
 
 @Component({
   selector: 'app-profile-page',
@@ -18,6 +19,7 @@ export class ProfilePage implements OnInit {
   private readonly authApi = inject(AuthApiService);
   private readonly authStore = inject(AuthStore);
   private readonly fb = inject(FormBuilder);
+  private readonly notifications = inject(NotificationService);
 
   protected readonly profile = signal<UserProfile | null>(null);
   protected readonly loading = signal(true);
@@ -39,6 +41,10 @@ export class ProfilePage implements OnInit {
   protected readonly form = this.fb.nonNullable.group({
     firstName: ['', [Validators.required, Validators.maxLength(100)]],
     lastName: ['', [Validators.required, Validators.maxLength(100)]],
+    phoneNumber: [''],
+    address: [''],
+    city: [''],
+    country: [''],
   });
 
   ngOnInit(): void {
@@ -50,7 +56,14 @@ export class ProfilePage implements OnInit {
     this.authApi.getProfile().subscribe({
       next: (profile) => {
         this.profile.set(profile);
-        this.form.setValue({ firstName: profile.firstName, lastName: profile.lastName });
+        this.form.setValue({
+          firstName: profile.firstName,
+          lastName: profile.lastName,
+          phoneNumber: profile.phoneNumber ?? '',
+          address: profile.address ?? '',
+          city: profile.city ?? '',
+          country: profile.country ?? '',
+        });
         this.loading.set(false);
       },
       error: (err) => {
@@ -67,7 +80,14 @@ export class ProfilePage implements OnInit {
   cancelEditing(): void {
     const p = this.profile();
     if (p) {
-      this.form.setValue({ firstName: p.firstName, lastName: p.lastName });
+      this.form.setValue({
+        firstName: p.firstName,
+        lastName: p.lastName,
+        phoneNumber: p.phoneNumber ?? '',
+        address: p.address ?? '',
+        city: p.city ?? '',
+        country: p.country ?? '',
+      });
     }
     this.editing.set(false);
   }
@@ -79,19 +99,29 @@ export class ProfilePage implements OnInit {
     }
     this.saving.set(true);
     this.error.set(null);
-    const { firstName, lastName } = this.form.getRawValue();
-    this.authApi.updateProfile({ firstName, lastName }).subscribe({
-      next: () => {
-        this.saving.set(false);
-        this.editing.set(false);
-        this.authStore.updateDisplayName(firstName, lastName);
-        this.loadProfile();
-      },
-      error: (err) => {
-        this.saving.set(false);
-        this.error.set(getApiErrorMessage(err, 'Unable to update profile.'));
-      },
-    });
+    const { firstName, lastName, phoneNumber, address, city, country } = this.form.getRawValue();
+    this.authApi
+      .updateProfile({
+        firstName,
+        lastName,
+        phoneNumber: phoneNumber || null,
+        address: address || null,
+        city: city || null,
+        country: country || null,
+      })
+      .subscribe({
+        next: () => {
+          this.saving.set(false);
+          this.editing.set(false);
+          this.authStore.updateDisplayName(firstName, lastName);
+          this.notifications.success('Profile updated successfully.');
+          this.loadProfile();
+        },
+        error: (err) => {
+          this.saving.set(false);
+          this.error.set(getApiErrorMessage(err, 'Unable to update profile.'));
+        },
+      });
   }
 
   onFileSelected(event: Event): void {
@@ -114,6 +144,7 @@ export class ProfilePage implements OnInit {
       next: (avatarUrl) => {
         this.uploading.set(false);
         this.authStore.updateAvatar(avatarUrl);
+        this.notifications.success('Profile picture updated.');
         this.loadProfile();
       },
       error: (err) => {
@@ -134,6 +165,7 @@ export class ProfilePage implements OnInit {
       next: () => {
         this.removing.set(false);
         this.authStore.clearAvatar();
+        this.notifications.success('Profile picture removed.');
         this.loadProfile();
       },
       error: (err) => {

@@ -30,6 +30,11 @@ export class BookForm {
     title: ['', [trimmedRequired(), Validators.maxLength(200)]],
     author: ['', [trimmedRequired(), Validators.maxLength(200)]],
     description: ['', [trimmedRequired(), Validators.maxLength(5000)]],
+    isbn: ['', [Validators.maxLength(20)]],
+    publisher: ['', [Validators.maxLength(200)]],
+    publishedYear: [null as number | null],
+    genre: ['', [Validators.maxLength(100)]],
+    pageCount: [null as number | null],
     status: [BookStatus.InProgress as BookStatus],
     rating: [null as number | null, [Validators.min(0), Validators.max(5)]],
   });
@@ -37,7 +42,18 @@ export class BookForm {
   constructor() {
     effect(() => {
       const value = this.initialValue();
-      if (value) this.form.patchValue(value);
+      if (value) {
+        this.form.patchValue({
+          title: value.title,
+          author: value.author,
+          description: value.description,
+          isbn: value.isbn ?? '',
+          publisher: value.publisher ?? '',
+          publishedYear: value.publishedYear,
+          genre: value.genre ?? '',
+          pageCount: value.pageCount,
+        });
+      }
     });
     effect(() => {
       const status = this.currentStatus();
@@ -59,6 +75,11 @@ export class BookForm {
       title: raw.title.trim(),
       author: raw.author.trim(),
       description: raw.description.trim(),
+      isbn: raw.isbn.trim() || null,
+      publisher: raw.publisher.trim() || null,
+      publishedYear: raw.publishedYear,
+      genre: raw.genre.trim() || null,
+      pageCount: raw.pageCount,
       ...(this.statusEditable() ? { status: raw.status, rating: raw.rating } : {}),
     });
   }

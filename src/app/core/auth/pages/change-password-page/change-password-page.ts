@@ -5,6 +5,7 @@ import { AuthApiService } from '../../data-access/auth-api.service';
 import { AuthShell } from '../../components/auth-shell/auth-shell';
 import { matchValidator } from '../../validators/match.validator';
 import { getApiErrorMessage } from '../../../../infrastructure/api/api-error.util';
+import { NotificationService } from '../../../../shared/services/notification.service';
 
 @Component({
   selector: 'app-change-password-page',
@@ -19,6 +20,9 @@ export class ChangePasswordPage {
 
   protected readonly submitting = signal(false);
   protected readonly error = signal<string | null>(null);
+
+  private readonly notifications = inject(NotificationService);
+
 
   protected readonly form = this.fb.nonNullable.group(
     {
@@ -41,6 +45,7 @@ export class ChangePasswordPage {
       next: () => {
         this.submitting.set(false);
         void this.router.navigateByUrl('/profile');
+        this.notifications.success('Password changed successfully.');
       },
       error: (err) => {
         this.submitting.set(false);
