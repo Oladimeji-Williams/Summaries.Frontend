@@ -1,1 +1,69 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  // Brand
+  --color-primary-50: #eef2ff;
+  --color-primary-100: #e0e7ff;
+  --color-primary-200: #c7d2fe;
+  --color-primary-400: #818cf8;
+  --color-primary-500: #6366f1;
+  --color-primary-600: #4f46e5;
+  --color-primary-700: #4338ca;
+
+  // Accent
+  --color-accent-400: #f6c358;
+  --color-accent-500: #f2b134;
+  --color-accent-600: #d99a1f;
+
+  // Neutrals (slate)
+  --color-neutral-0: #ffffff;
+  --color-neutral-50: #f8fafc;
+  --color-neutral-100: #f1f5f9;
+  --color-neutral-200: #e2e8f0;
+  --color-neutral-300: #cbd5e1;
+  --color-neutral-400: #94a3b8;
+  --color-neutral-500: #64748b;
+  --color-neutral-600: #475569;
+  --color-neutral-700: #334155;
+  --color-neutral-800: #1e293b;
+  --color-neutral-900: #0f172a;
+
+  // Semantic
+  --color-success-50: #f0fdf4;
+  --color-success-500: #16a34a;
+  --color-success-600: #15803d;
+  --color-danger-50: #fef2f2;
+  --color-danger-500: #dc2626;
+  --color-danger-600: #b42318;
+  --color-warning-50: #fffbeb;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+
+  // Status (books) — semantic meaning, not arbitrary
+  --status-not-started-bg: var(--color-neutral-100);
+  --status-not-started-fg: var(--color-neutral-600);
+  --status-in-progress-bg: var(--color-warning-50);
+  --status-in-progress-fg: var(--color-warning-600);
+  --status-read-bg: var(--color-success-50);
+  --status-read-fg: var(--color-success-600);
+
+  // Surface & text aliases — use these in components, not raw colors,
+  // so a future palette shift only ever touches this one file
+  --surface-page: var(--color-neutral-50);
+  --surface-card: var(--color-neutral-0);
+  --surface-border: var(--color-neutral-200);
+  --surface-hover: var(--color-neutral-100);
+  --text-primary: var(--color-neutral-900);
+  --text-secondary: var(--color-neutral-500);
+  --text-on-primary: var(--color-neutral-0);
+
+  --radius-sm: 0.4rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+
+  --shadow-sm: 0 1px 3px rgb(15 23 42 / 8%);
+  --shadow-md: 0 8px 24px rgb(15 23 42 / 12%);
+}
+
+body {
+  background: var(--surface-page);
+  color: var(--text-primary);
+}

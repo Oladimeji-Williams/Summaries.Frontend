@@ -4,50 +4,52 @@
   @if (readers(); as r) {
     <h1>{{ r.title }}</h1>
     <p>{{ r.author }}</p>
-    <table class="admin-table">
-      <thead>
-        <tr>
-          @for (col of ['name','email','status','rating','started','read','duration']; track col) {
-            <th>
-              <div class="col-header">
-                <span class="col-label">
-                  @switch (col) {
-                    @case ('name') { Reader } @case ('email') { Email } @case ('status') { Status }
-                    @case ('rating') { Rating } @case ('started') { Started } @case ('read') { Read }
-                    @case ('duration') { Reading time }
-                  }
-                </span>
-                <app-sort-indicator
-                  [direction]="table.sortDirectionFor(col)"
-                  [priority]="table.sortPriority(col)"
-                  [showPriority]="table.hasAnySort()"
-                  (sortClick)="table.toggleSort(col)"
-                  (clearClick)="table.clearSort(col)"
-                />
-                <app-column-filter
-                  [values]="table.uniqueValues(col)"
-                  [selected]="table.activeFilterFor(col)"
-                  (apply)="table.setFilter(col, $event)"
-                  (clear)="table.clearFilter(col)"
-                />
-              </div>
-            </th>
-          }
-        </tr>
-      </thead>
-      <tbody>
-        @for (reader of table.rowsView(); track reader.userId) {
+    <div class="table-scroll">
+      <table class="admin-table">
+        <thead>
           <tr>
-            <td>{{ reader.firstName }} {{ reader.lastName }}</td>
-            <td>{{ reader.email }}</td>
-            <td>{{ bookStatusLabel(reader.status) }}</td>
-            <td>{{ reader.rating ?? '—' }}</td>
-            <td>{{ reader.dateStarted ? (reader.dateStarted | date:'medium') : '—' }}</td>
-            <td>{{ reader.dateRead ? (reader.dateRead | date:'medium') : '—' }}</td>
-            <td>{{ formatReadingDuration(reader.readingDurationHours) }}</td>
+            @for (col of ['name','email','status','rating','started','read','duration']; track col) {
+              <th>
+                <div class="col-header">
+                  <span class="col-label">
+                    @switch (col) {
+                      @case ('name') { Reader } @case ('email') { Email } @case ('status') { Status }
+                      @case ('rating') { Rating } @case ('started') { Started } @case ('read') { Read }
+                      @case ('duration') { Reading time }
+                    }
+                  </span>
+                  <app-sort-indicator
+                    [direction]="table.sortDirectionFor(col)"
+                    [priority]="table.sortPriority(col)"
+                    [showPriority]="table.hasAnySort()"
+                    (sortClick)="table.toggleSort(col)"
+                    (clearClick)="table.clearSort(col)"
+                  />
+                  <app-column-filter
+                    [values]="table.uniqueValues(col)"
+                    [selected]="table.activeFilterFor(col)"
+                    (apply)="table.setFilter(col, $event)"
+                    (clear)="table.clearFilter(col)"
+                  />
+                </div>
+              </th>
+            }
           </tr>
-        }
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          @for (reader of table.rowsView(); track reader.userId) {
+            <tr>
+              <td>{{ reader.firstName }} {{ reader.lastName }}</td>
+              <td>{{ reader.email }}</td>
+              <td>{{ bookStatusLabel(reader.status) }}</td>
+              <td>{{ reader.rating ?? '—' }}</td>
+              <td>{{ reader.dateStarted ? (reader.dateStarted | date:'medium') : '—' }}</td>
+              <td>{{ reader.dateRead ? (reader.dateRead | date:'medium') : '—' }}</td>
+              <td>{{ formatReadingDuration(reader.readingDurationHours) }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   }
 </section>

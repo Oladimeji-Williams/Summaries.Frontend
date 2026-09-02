@@ -1,0 +1,31 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-md);
+  background: var(--surface-card);
+  font: inherit;
+  cursor: pointer;
+}
+
+.button-danger {
+  border-color: var(--color-danger-500);
+  color: var(--color-danger-600);
+
+  &:hover:not(:disabled) {
+    background: var(--color-danger-50);
+    border-color: var(--color-danger-600);
+  }
+}
+
+.button-small {
+  padding: 0.45rem 0.7rem;
+  font-size: 0.875rem;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

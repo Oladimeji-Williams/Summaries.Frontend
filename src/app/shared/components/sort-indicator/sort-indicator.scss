@@ -6,12 +6,14 @@
 
 .sort-toggle {
   display: inline-flex;
-  padding: 0.1rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem;
   border: 0;
   background: none;
   color: #999;
   cursor: pointer;
-  border-radius: 0.2rem;
+  border-radius: 0.25rem;
 
   &:hover {
     background: rgba(0, 0, 0, 0.06);

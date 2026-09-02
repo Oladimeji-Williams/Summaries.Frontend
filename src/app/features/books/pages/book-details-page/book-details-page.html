@@ -30,33 +30,32 @@
         <h3>Description</h3>
         <p>{{ book.description }}</p>
       </section>
-      <section class="genre">
-        <h3>Genre</h3>
-        <p>{{ book.genre }}</p>
-      </section>
-      <section class="publisher">
-        <h3>Publisher</h3>
-        <p>{{ book.publisher }}</p>
-      </section>
-      <section class="publishedYear">
-        <h3>Published Year</h3>
-        <p>{{ book.publishedYear }}</p>
-      </section>
-      <section class="isbn">
-        <h3>ISBN</h3>
-        <p>{{ book.isbn }}</p>
-      </section>
-      <section class="bookCount">
-        <h3>Book Count</h3>
-        <p>{{ book.pageCount }}</p>
-      </section>
 
       <section class="book-metadata">
+        <div class="metadata-item">
+          <span class="metadata-label">Genre</span>
+          <span class="metadata-value">{{ book.genre || '—' }}</span>
+        </div>
+        <div class="metadata-item">
+          <span class="metadata-label">Publisher</span>
+          <span class="metadata-value">{{ book.publisher || '—' }}</span>
+        </div>
+        <div class="metadata-item">
+          <span class="metadata-label">Published year</span>
+          <span class="metadata-value">{{ book.publishedYear || '—' }}</span>
+        </div>
+        <div class="metadata-item">
+          <span class="metadata-label">ISBN</span>
+          <span class="metadata-value">{{ book.isbn || '—' }}</span>
+        </div>
+        <div class="metadata-item">
+          <span class="metadata-label">Page count</span>
+          <span class="metadata-value">{{ book.pageCount || '—' }}</span>
+        </div>
         <div class="metadata-item">
           <span class="metadata-label">Rating</span>
           <app-rating-bar [rating]="book.myReadingStatus?.rating ?? null" />
         </div>
-
         <div class="metadata-item">
           <span class="metadata-label">Date started</span>
           @if (book.myReadingStatus?.dateStarted) {
@@ -65,7 +64,6 @@
             <span class="metadata-value empty-value">Not started</span>
           }
         </div>
-
         <div class="metadata-item">
           <span class="metadata-label">Date read</span>
           @if (book.myReadingStatus?.dateRead) {
@@ -74,23 +72,22 @@
             <span class="metadata-value empty-value">Not read</span>
           }
         </div>
-
         <div class="metadata-item">
           <span class="metadata-label">Status</span>
-          <span class="status-badge">
-            {{ bookStatusLabel(book.myReadingStatus?.status ?? BookStatus.NotStarted) }}
-          </span>
+          <td class="status-cell">
+            <span class="status-badge" [class]="bookStatusClass(book.myReadingStatus?.status ?? BookStatus.NotStarted)">
+              {{ bookStatusLabel(book.myReadingStatus?.status ?? BookStatus.NotStarted) }}
+            </span>
+          </td>
         </div>
       </section>
 
       <footer class="actions">
-        @if ((book.myReadingStatus?.status ?? BookStatus.NotStarted) !== BookStatus.Read) {
+        @if (canEdit()) {
           <a [routerLink]="['/books', book.id, 'edit']" class="button button-primary">Edit book</a>
         }
         @if (auth.isAdmin()) {
-          <a [routerLink]="['/books', book.id, 'delete-book']" class="button button-danger">Delete Book</a>
-        }
-        @if (auth.isAdmin()) {
+          <app-delete-book-button [bookId]="book.id" (deleted)="onDeleted()" />
           <a [routerLink]="['/admin/books', book.id, 'readers']" class="button">View readers</a>
         }
         <a routerLink="/books" class="button">Back</a>

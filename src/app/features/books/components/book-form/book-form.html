@@ -1,61 +1,69 @@
 <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
-  <div class="form-field">
-    <label for="title">Title</label>
-    <input id="title" type="text" formControlName="title" autocomplete="off" />
-    @if (form.controls.title.touched && form.controls.title.invalid) {
-      <p class="validation-error">
-        @if (form.controls.title.hasError('trimmedRequired')) { Title is required. }
-        @if (form.controls.title.hasError('maxlength')) { Title cannot exceed 200 characters. }
-      </p>
-    }
-  </div>
+  @if (metadataEditable()) {
+    <div class="form-field">
+      <label for="title">Title</label>
+      <input id="title" type="text" formControlName="title" autocomplete="off" />
+      @if (form.controls.title.touched && form.controls.title.invalid) {
+        <p class="validation-error">
+          @if (form.controls.title.hasError('trimmedRequired')) { Title is required. }
+          @if (form.controls.title.hasError('maxlength')) { Title cannot exceed 200 characters. }
+        </p>
+      }
+    </div>
 
-  <div class="form-field">
-    <label for="author">Author</label>
-    <input id="author" type="text" formControlName="author" autocomplete="off" />
-    @if (form.controls.author.touched && form.controls.author.invalid) {
-      <p class="validation-error">
-        @if (form.controls.author.hasError('trimmedRequired')) { Author is required. }
-        @if (form.controls.author.hasError('maxlength')) { Author cannot exceed 200 characters. }
-      </p>
-    }
-  </div>
+    <div class="form-field">
+      <label for="author">Author</label>
+      <input id="author" type="text" formControlName="author" autocomplete="off" />
+      @if (form.controls.author.touched && form.controls.author.invalid) {
+        <p class="validation-error">
+          @if (form.controls.author.hasError('trimmedRequired')) { Author is required. }
+          @if (form.controls.author.hasError('maxlength')) { Author cannot exceed 200 characters. }
+        </p>
+      }
+    </div>
 
-  <div class="form-field">
-    <label for="description">Description</label>
-    <textarea id="description" rows="8" formControlName="description"></textarea>
-    @if (form.controls.description.touched && form.controls.description.invalid) {
-      <p class="validation-error">
-        @if (form.controls.description.hasError('trimmedRequired')) { Description is required. }
-        @if (form.controls.description.hasError('maxlength')) { Description cannot exceed 5000 characters. }
-      </p>
-    }
-  </div>
+    <div class="form-field">
+      <label for="description">Description</label>
+      <textarea id="description" rows="8" formControlName="description"></textarea>
+      @if (form.controls.description.touched && form.controls.description.invalid) {
+        <p class="validation-error">
+          @if (form.controls.description.hasError('trimmedRequired')) { Description is required. }
+          @if (form.controls.description.hasError('maxlength')) { Description cannot exceed 5000 characters. }
+        </p>
+      }
+    </div>
 
-  <div class="form-field">
-    <label for="genre">Genre</label>
-    <input id="genre" type="text" formControlName="genre" autocomplete="off" />
-  </div>
+    <div class="form-field">
+      <label for="genre">Genre</label>
+      <input id="genre" type="text" formControlName="genre" autocomplete="off" />
+    </div>
 
-  <div class="form-field">
-    <label for="publisher">Publisher</label>
-    <input id="publisher" type="text" formControlName="publisher" autocomplete="off" />
-  </div>
+    <div class="form-field">
+      <label for="publisher">Publisher</label>
+      <input id="publisher" type="text" formControlName="publisher" autocomplete="off" />
+    </div>
 
-  <div class="form-field">
-    <label for="publishedYear">Published year</label>
-    <input id="publishedYear" type="number" formControlName="publishedYear" />
-  </div>
+    <div class="form-field">
+      <label for="publishedYear">Published year</label>
+      <input id="publishedYear" type="number" formControlName="publishedYear" />
+    </div>
 
-  <div class="form-field">
-    <label for="isbn">ISBN</label>
-    <input id="isbn" type="text" formControlName="isbn" autocomplete="off" />
-  </div>
+    <div class="form-field">
+      <label for="isbn">ISBN</label>
+      <input id="isbn" type="text" formControlName="isbn" autocomplete="off" />
+    </div>
 
-  <div class="form-field">
-    <label for="pageCount">Page count</label>
-    <input id="pageCount" type="number" formControlName="pageCount" />
-  </div>
+    <div class="form-field">
+      <label for="pageCount">Page count</label>
+      <input id="pageCount" type="number" formControlName="pageCount" />
+    </div>
+  } @else {
+    <div class="metadata-readonly">
+      <h2>{{ form.controls.title.value }}</h2>
+      <p class="author-readonly">{{ form.controls.author.value }}</p>
+      <p class="description-readonly">{{ form.controls.description.value }}</p>
+    </div>
+  }
 
   @if (currentStatus() !== null) {
     <div class="form-field">

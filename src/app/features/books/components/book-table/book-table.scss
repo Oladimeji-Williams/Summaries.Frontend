@@ -1,56 +1,70 @@
-/* =========================================
-   TABLE VIEW
-   ========================================= */
-
 .book-table-container {
   overflow: hidden;
-
-  border: 1px solid #ddd;
-  border-radius: 0.75rem;
-
-  background: #fff;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-lg);
+  background: var(--surface-card);
 }
 
 .table-scroll {
-  overflow-x: auto;
+  overflow: auto;
+  max-height: 70vh;
 }
 
 .book-table {
   width: 100%;
-
   border-collapse: collapse;
-
   text-align: left;
 
   th,
   td {
     padding: 1rem 1.25rem;
-
-    border-bottom: 1px solid #eee;
-
+    border-bottom: 1px solid var(--surface-border);
+    border-right: 1px solid var(--surface-border);
     vertical-align: middle;
+
+    &:last-child {
+      border-right: none;
+    }
   }
 
   th {
-    background: #f7f7f7;
-
-    color: #333;
-
+    background: var(--surface-hover);
+    color: var(--text-secondary);
     font-size: 0.85rem;
     font-weight: 700;
-
     text-transform: uppercase;
     letter-spacing: 0.03em;
-
     white-space: nowrap;
   }
 
+  thead th {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+  }
+
+  th:first-child,
+  td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background: var(--surface-card);
+  }
+
+  thead th:first-child {
+    z-index: 4;
+    background: var(--surface-hover);
+  }
+
   tbody tr {
-    transition:
-      background-color 0.15s ease;
+    transition: background-color 0.15s ease;
 
     &:hover {
-      background: #fafafa;
+      background: var(--surface-hover);
+
+      td:first-child {
+        background: var(--surface-hover);
+      }
     }
 
     &:last-child td {
@@ -61,11 +75,10 @@
 
 .title-cell {
   min-width: 200px;
-
   font-weight: 600;
 
   a {
-    color: #111;
+    color: var(--color-primary-600);
     text-decoration: none;
 
     &:hover {
@@ -73,7 +86,7 @@
     }
 
     &:focus-visible {
-      outline: 2px solid #111;
+      outline: 2px solid var(--color-primary-500);
       outline-offset: 2px;
     }
   }
@@ -81,64 +94,59 @@
 
 .author-cell {
   min-width: 160px;
-
   font-weight: 500;
-
   white-space: nowrap;
 }
 
 .description-cell {
   min-width: 300px;
-
   max-width: 500px;
-
-  color: #555;
-
+  color: var(--text-secondary);
   line-height: 1.5;
 }
 
 .rating-cell {
   min-width: 100px;
-
   white-space: nowrap;
-}
-
-.rating-value {
-  font-weight: 600;
 }
 
 .date-cell {
   min-width: 130px;
-
   white-space: nowrap;
 }
 
 .status-cell {
   min-width: 130px;
-
   white-space: nowrap;
 }
 
 .status-badge {
   display: inline-flex;
   align-items: center;
-
   padding: 0.35rem 0.65rem;
-
-  border: 1px solid #ddd;
   border-radius: 999px;
-
-  background: #f7f7f7;
-
   font-size: 0.8rem;
   font-weight: 600;
-
   white-space: nowrap;
+
+  &.status-not-started {
+    background: var(--status-not-started-bg);
+    color: var(--status-not-started-fg);
+  }
+
+  &.status-in-progress {
+    background: var(--status-in-progress-bg);
+    color: var(--status-in-progress-fg);
+  }
+
+  &.status-read {
+    background: var(--status-read-bg);
+    color: var(--status-read-fg);
+  }
 }
 
 .empty-value {
-  color: #888;
-
+  color: var(--text-secondary);
   font-size: 0.875rem;
 }
 
@@ -158,145 +166,33 @@
   gap: 0.5rem;
 }
 
-
-
-
-/* =========================================
-   BUTTONS
-   ========================================= */
-
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
   padding: 0.65rem 1rem;
-
-  border: 1px solid #ccc;
-  border-radius: 0.5rem;
-
-  background: #fff;
-  color: #111;
-
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-md);
+  background: var(--surface-card);
+  color: var(--text-primary);
   text-decoration: none;
-
   cursor: pointer;
-
   font: inherit;
-
-  transition:
-    background-color 0.15s ease,
-    border-color 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 
   &:hover {
-    background: #f5f5f5;
+    background: var(--surface-hover);
   }
 
   &:focus-visible {
-    outline: 2px solid #111;
+    outline: 2px solid var(--color-primary-500);
     outline-offset: 2px;
-  }
-}
-
-.button-primary {
-  border-color: #111;
-  background: #111;
-  color: #fff;
-
-  &:hover {
-    background: #333;
-    border-color: #333;
-  }
-}
-
-.button-danger {
-  border-color: #d33;
-  color: #b42318;
-
-  &:hover {
-    background: #fff1f0;
-    border-color: #b42318;
   }
 }
 
 .button-small {
   padding: 0.45rem 0.7rem;
   font-size: 0.875rem;
-}
-
-
-/* =========================================
-   RESPONSIVE
-   ========================================= */
-
-@media (max-width: 768px) {
-  .books-page {
-    padding: 1rem;
-  }
-
-  .page-header {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .page-actions {
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
-
-  .book-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .book-table {
-    min-width: 850px;
-  }
-}
-
-@media (max-width: 480px) {
-  .page-actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .view-switch {
-    width: 100%;
-  }
-
-  .view-switch-button {
-    flex: 1;
-  }
-
-  .page-actions > .button {
-    width: 100%;
-  }
-
-  .book-card {
-    padding: 1.25rem;
-  }
-
-  .book-card-actions {
-    flex-direction: column;
-
-    .button {
-      width: 100%;
-    }
-  }
-}
-
-.book-table {
-  th,
-  td {
-    border-right: 1px solid #eee;
-
-    &:last-child {
-      border-right: none;
-    }
-  }
-
-  tbody tr:hover {
-    background: #f7f7f7;
-  }
 }
 
 .col-header {
@@ -310,4 +206,8 @@
   text-transform: uppercase;
   letter-spacing: 0.03em;
   font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+  .book-table { min-width: 850px; }
 }

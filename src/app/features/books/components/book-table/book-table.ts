@@ -1,16 +1,17 @@
 import { Component, inject, input } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { Book, BookStatus, bookStatusLabel } from '../../models';
+import { Book, BookStatus, bookStatusClass, bookStatusLabel } from '../../models';
 import { AuthStore } from '../../../../core/auth/state/auth.store';
 import { TableState, ColumnDef } from '../../../../shared/table/table-state';
 import { ColumnFilter } from '../../../../shared/components/column-filter/column-filter';
+import { SortIndicator } from '../../../../shared/components/sort-indicator/sort-indicator';
 import { RatingBar } from '../rating-bar/rating-bar';
-import { SortIndicator } from "../../../../shared/components/sort-indicator/sort-indicator";
+import { DeleteBookButton } from '../delete-book-button/delete-book-button';
 
 @Component({
   selector: 'app-book-table',
-  imports: [RouterLink, DatePipe, ColumnFilter, RatingBar, SortIndicator],
+  imports: [RouterLink, DatePipe, ColumnFilter, SortIndicator, RatingBar, DeleteBookButton],
   templateUrl: './book-table.html',
   styleUrl: './book-table.scss',
 })
@@ -19,6 +20,11 @@ export class BookTable {
   protected readonly BookStatus = BookStatus;
   protected readonly bookStatusLabel = bookStatusLabel;
   protected readonly auth = inject(AuthStore);
+  protected readonly bookStatusClass = bookStatusClass;
+
+  protected canEdit(book: Book): boolean {
+    return this.auth.isAdmin() || (book.myReadingStatus?.status ?? BookStatus.NotStarted) !== BookStatus.Read;
+  }
 
   private ratingLabel(b: Book): string {
     return b.myReadingStatus?.rating != null ? `${b.myReadingStatus.rating}/5` : 'Not rated';
@@ -37,8 +43,6 @@ export class BookTable {
       value: (b) => this.ratingLabel(b),
       sortValue: (b) => b.myReadingStatus?.rating ?? -1,
     },
-    { key: 'genre', label: 'Genre', value: (b) => b.genre ?? '—', sortable: true, filterable: true },
-    { key: 'publisher', label: 'Publisher', value: (b) => b.publisher ?? '—', sortable: true, filterable: true },
     {
       key: 'started', label: 'Started', sortable: true, filterable: true,
       value: (b) => this.dateLabel(b.myReadingStatus?.dateStarted),

@@ -20,6 +20,8 @@ export class BookForm {
   readonly cancelLink = input('/books');
   readonly currentStatus = input<BookStatus | null>(null);
   readonly statusEditable = input(false);
+  /** When false, title/author/description/etc. render as read-only text, not inputs. */
+  readonly metadataEditable = input(true);
 
   readonly save = output<BookFormValue>();
 

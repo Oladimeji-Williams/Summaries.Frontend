@@ -9,49 +9,94 @@
   max-width: 420px;
   padding: 2rem;
   text-align: center;
-  border: 1px solid #eee;
-  border-radius: 0.75rem;
+  border-radius: var(--radius-lg);
+  background: var(--surface-card);
+  box-shadow: var(--shadow-sm);
+}
+
+.avatar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.avatar,
+.avatar-img {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+}
+
+.avatar-img {
+  object-fit: cover;
 }
 
 .avatar {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 72px;
-  height: 72px;
   margin: 0 auto 1rem;
-  border-radius: 50%;
-  background: #111;
-  color: #fff;
+  background: var(--color-primary-600);
+  color: var(--text-on-primary);
   font-size: 1.5rem;
   font-weight: 700;
 }
 
-h1 { margin: 0 0 0.25rem; }
-.email { margin: 0 0 1.5rem; color: #666; }
+.avatar-actions {
+  display: flex;
+  gap: 1rem;
+}
 
-.profile-meta { margin: 0 0 1.5rem; text-align: left; }
+.avatar-upload-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-primary-600);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.avatar-remove-label {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-danger-600);
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+h1 { margin: 0 0 0.25rem; color: var(--text-primary); }
+.email { margin: 0 0 1.5rem; color: var(--text-secondary); }
+
+.profile-meta {
+  margin: 0 0 1.5rem;
+  text-align: left;
+}
+
 .meta-row {
   display: flex;
   justify-content: space-between;
   padding: 0.6rem 0;
-  border-bottom: 1px solid #f0f0f0;
-  dt { color: #666; font-weight: 600; }
-  dd { margin: 0; }
+  border-bottom: 1px solid var(--surface-border);
+
+  dt { color: var(--text-secondary); font-weight: 600; }
+  dd { margin: 0; color: var(--text-primary); }
 }
 
-.profile-actions { display: flex; gap: 0.75rem; justify-content: center; }
-.button {
-  padding: 0.65rem 1rem;
-  border: 1px solid #ccc;
-  border-radius: 0.5rem;
-  background: #fff;
-  color: inherit;
-  text-decoration: none;
-  font: inherit;
-  cursor: pointer;
+.profile-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
 }
-.button-primary { border-color: #111; background: #111; color: #fff; }
 
 .edit-form {
   text-align: left;
@@ -63,70 +108,42 @@ h1 { margin: 0 0 0.25rem; }
   gap: 0.4rem;
   margin-bottom: 1rem;
 
-  label {
-    font-weight: 600;
-  }
+  label { font-weight: 600; color: var(--text-primary); }
 
   input {
     padding: 0.65rem 0.85rem;
-    border: 1px solid #ccc;
-    border-radius: 0.5rem;
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-md);
+    background: var(--surface-card);
+    color: var(--text-primary);
     font: inherit;
   }
 }
 
 .validation-error {
   margin: 0;
-  color: #b42318;
+  color: var(--color-danger-600);
   font-size: 0.85rem;
 }
 
-.button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.avatar-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.avatar-img {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.avatar-upload-label {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #111;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-.avatar-actions {
-  display: flex;
-  gap: 1rem;
-}
-
-.avatar-remove-label {
-  padding: 0;
-  border: 0;
-  background: none;
+.button {
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-md);
+  background: var(--surface-card);
+  color: var(--text-primary);
+  text-decoration: none;
   font: inherit;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #b42318;
-  text-decoration: underline;
   cursor: pointer;
 
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
   }
+}
+
+.button-primary {
+  border-color: var(--color-primary-600);
+  background: var(--color-primary-600);
+  color: var(--text-on-primary);
 }

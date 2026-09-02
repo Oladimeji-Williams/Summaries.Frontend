@@ -13,11 +13,11 @@
   align-items: center;
   gap: 1rem;
   padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
-  background: #1a7f37;
-  color: #fff;
+  border-radius: var(--radius-md);
+  background: var(--color-success-500);
+  color: var(--text-on-primary);
   font-size: 0.9rem;
-  box-shadow: 0 8px 20px rgb(0 0 0 / 20%);
+  box-shadow: var(--shadow-md);
   animation: toast-in 0.2s ease;
 
   button {
@@ -36,7 +36,7 @@
 }
 
 .toast-error {
-  background: #b42318;
+  background: var(--color-danger-600);
 }
 
 @keyframes toast-in {

@@ -1,45 +1,61 @@
 .site-header {
   display: flex;
+  flex-wrap: nowrap;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
   padding: 0.85rem 1.5rem;
-  border-bottom: 1px solid #eee;
+  background: var(--surface-card);
+  border-bottom: 1px solid var(--surface-border);
 }
 
 .brand {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: #111;
+  flex-shrink: 0;
+  color: var(--text-primary);
   text-decoration: none;
 }
 
 .brand-logo {
   width: 28px;
   height: 28px;
+  flex-shrink: 0;
 }
 
 .brand-name {
   font-weight: 700;
   font-size: 1.1rem;
+  white-space: nowrap;
+  background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-400));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .site-nav {
   display: flex;
-  gap: 1.5rem;
-  flex: 1;
+  gap: 0.5rem;
+  flex: 1 1 auto;
+  min-width: 0;
 
   a {
-    color: #555;
+    padding: 0.45rem 0.9rem;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
     text-decoration: none;
     font-weight: 600;
-
-    &.active {
-      color: #111;
-    }
+    white-space: nowrap;
+    transition: background-color 0.15s ease, color 0.15s ease;
 
     &:hover {
-      color: #111;
+      background: var(--surface-hover);
+      color: var(--text-primary);
+    }
+
+    &.active {
+      background: var(--color-primary-600);
+      color: var(--text-on-primary);
     }
   }
 }

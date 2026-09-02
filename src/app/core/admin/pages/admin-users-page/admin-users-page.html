@@ -3,76 +3,79 @@
   @if (loading()) { <p>Loading...</p> }
   @if (error(); as err) { <p class="error">{{ err }}</p> }
   @if (!loading() && !error()) {
-    <table class="admin-table">
-      <thead>
-        <tr>
-          <th>
-            <div class="col-header">
-              <span class="col-label">Name</span>
-              <app-sort-indicator
-                [direction]="table.sortDirectionFor('name')"
-                [priority]="table.sortPriority('name')"
-                [showPriority]="table.hasAnySort()"
-                (sortClick)="table.toggleSort('name')"
-                (clearClick)="table.clearSort('name')"
-              />
-              <app-column-filter
-                [values]="table.uniqueValues('name')"
-                [selected]="table.activeFilterFor('name')"
-                (apply)="table.setFilter('name', $event)"
-                (clear)="table.clearFilter('name')"
-              />
-            </div>
-          </th>
-          <th>
-            <div class="col-header">
-              <span class="col-label">Email</span>
-              <app-sort-indicator
-                [direction]="table.sortDirectionFor('email')"
-                [priority]="table.sortPriority('email')"
-                [showPriority]="table.hasAnySort()"
-                (sortClick)="table.toggleSort('email')"
-                (clearClick)="table.clearSort('email')"
-              />
-              <app-column-filter
-                [values]="table.uniqueValues('email')"
-                [selected]="table.activeFilterFor('email')"
-                (apply)="table.setFilter('email', $event)"
-                (clear)="table.clearFilter('email')"
-              />
-            </div>
-          </th>
-          <th>
-            <div class="col-header">
-              <span class="col-label">Joined</span>
-              <app-sort-indicator
-                [direction]="table.sortDirectionFor('joined')"
-                [priority]="table.sortPriority('joined')"
-                [showPriority]="table.hasAnySort()"
-                (sortClick)="table.toggleSort('joined')"
-                (clearClick)="table.clearSort('joined')"
-              />
-              <app-column-filter
-                [values]="table.uniqueValues('joined')"
-                [selected]="table.activeFilterFor('joined')"
-                (apply)="table.setFilter('joined', $event)"
-                (clear)="table.clearFilter('joined')"
-              />
-            </div>
-          </th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (user of table.rowsView(); track user.id) {
+    <div class="table-scroll">
+      <table class="admin-table">
+        <!-- unchanged content -->
+        <thead>
           <tr>
-            <td>{{ user.firstName }} {{ user.lastName }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.createdAtUtc | date:'medium' }}</td>
-            <td><a [routerLink]="['/admin/users', user.id]">View reading history</a></td>
+            <th>
+              <div class="col-header">
+                <span class="col-label">Name</span>
+                <app-sort-indicator
+                  [direction]="table.sortDirectionFor('name')"
+                  [priority]="table.sortPriority('name')"
+                  [showPriority]="table.hasAnySort()"
+                  (sortClick)="table.toggleSort('name')"
+                  (clearClick)="table.clearSort('name')"
+                />
+                <app-column-filter
+                  [values]="table.uniqueValues('name')"
+                  [selected]="table.activeFilterFor('name')"
+                  (apply)="table.setFilter('name', $event)"
+                  (clear)="table.clearFilter('name')"
+                />
+              </div>
+            </th>
+            <th>
+              <div class="col-header">
+                <span class="col-label">Email</span>
+                <app-sort-indicator
+                  [direction]="table.sortDirectionFor('email')"
+                  [priority]="table.sortPriority('email')"
+                  [showPriority]="table.hasAnySort()"
+                  (sortClick)="table.toggleSort('email')"
+                  (clearClick)="table.clearSort('email')"
+                />
+                <app-column-filter
+                  [values]="table.uniqueValues('email')"
+                  [selected]="table.activeFilterFor('email')"
+                  (apply)="table.setFilter('email', $event)"
+                  (clear)="table.clearFilter('email')"
+                />
+              </div>
+            </th>
+            <th>
+              <div class="col-header">
+                <span class="col-label">Joined</span>
+                <app-sort-indicator
+                  [direction]="table.sortDirectionFor('joined')"
+                  [priority]="table.sortPriority('joined')"
+                  [showPriority]="table.hasAnySort()"
+                  (sortClick)="table.toggleSort('joined')"
+                  (clearClick)="table.clearSort('joined')"
+                />
+                <app-column-filter
+                  [values]="table.uniqueValues('joined')"
+                  [selected]="table.activeFilterFor('joined')"
+                  (apply)="table.setFilter('joined', $event)"
+                  (clear)="table.clearFilter('joined')"
+                />
+              </div>
+            </th>
+            <th></th>
           </tr>
-        }
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          @for (user of table.rowsView(); track user.id) {
+            <tr>
+              <td>{{ user.firstName }} {{ user.lastName }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.createdAtUtc | date:'medium' }}</td>
+              <td><a [routerLink]="['/admin/users', user.id]">View reading history</a></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   }
 </section>

@@ -159,19 +159,21 @@
               }
             </td>
             <td class="status-cell">
-              <span class="status-badge">{{ bookStatusLabel(book.myReadingStatus?.status ?? BookStatus.NotStarted) }}</span>
+              <span class="status-badge" [class]="bookStatusClass(book.myReadingStatus?.status ?? BookStatus.NotStarted)">
+                {{ bookStatusLabel(book.myReadingStatus?.status ?? BookStatus.NotStarted) }}
+              </span>
             </td>
-            <td class="actions-cell">
-              <div class="table-actions">
-                <a [routerLink]="['/books', book.id]" class="button button-small">View</a>
-                @if ((book.myReadingStatus?.status ?? BookStatus.NotStarted) !== BookStatus.Read) {
-                  <a [routerLink]="['/books', book.id, 'edit']" class="button button-small">Edit</a>
-                }
-                @if (auth.isAdmin()) {
-                  <a [routerLink]="['/books', book.id, 'delete-book']" class="button button-small button-danger">Delete</a>
-                }
-              </div>
-            </td>
+              <td class="actions-cell">
+                <div class="table-actions">
+                  <a [routerLink]="['/books', book.id]" class="button button-small">View</a>
+                  @if (canEdit(book)) {
+                    <a [routerLink]="['/books', book.id, 'edit']" class="button button-small">Edit</a>
+                  }
+                  @if (auth.isAdmin()) {
+                    <app-delete-book-button [bookId]="book.id" [small]="true" />
+                  }
+                </div>
+              </td>
           </tr>
         }
       </tbody>

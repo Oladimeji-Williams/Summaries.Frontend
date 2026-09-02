@@ -8,11 +8,11 @@
       </div>
       <footer class="book-card-actions">
         <a [routerLink]="['/books', book.id]" class="button">View</a>
-        @if ((book.myReadingStatus?.status ?? BookStatus.NotStarted) !== BookStatus.Read) {
+        @if (canEdit(book)) {
           <a [routerLink]="['/books', book.id, 'edit']" class="button">Edit</a>
         }
         @if (auth.isAdmin()) {
-          <a [routerLink]="['/books', book.id, 'delete-book']" class="button button-danger">Delete</a>
+          <app-delete-book-button [bookId]="book.id" />
         }
       </footer>
     </article>

@@ -23,9 +23,4 @@ export const booksRoutes: Routes = [
     canActivate: [authGuard],
     loadComponent: () => import('./pages/edit-book-page/edit-book-page').then(m => m.EditBookPage),
   },
-  {
-    path: ':id/delete-book',
-    canActivate: [adminGuard],
-    loadComponent: () => import('./pages/delete-book-page/delete-book-page').then(m => m.DeleteBookPage),
-  },
 ];

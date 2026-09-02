@@ -21,7 +21,7 @@
   }
 
   @if (store.selectedBook(); as book) {
-    @if (currentStatus() === BookStatus.Read) {
+    @if (locked()) {
       <section class="state">
         <h2>This book is complete</h2>
         <p>You've already finished this book — it can no longer be edited.</p>
@@ -31,7 +31,8 @@
       <app-book-form
         [initialValue]="initialValue()"
         [currentStatus]="currentStatus()"
-        [statusEditable]="currentStatus() === BookStatus.InProgress"
+        [statusEditable]="statusEditable()"
+        [metadataEditable]="metadataEditable()"
         [submitting]="store.loading()"
         submitLabel="Save changes"
         submittingLabel="Saving..."
