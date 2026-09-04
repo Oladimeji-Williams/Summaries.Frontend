@@ -5,10 +5,11 @@ import { BookForm } from '../../components/book-form/book-form';
 import { BookFormValue, BookStatus } from '../../models';
 import { AuthStore } from '../../../../core/auth/state/auth.store';
 import { NotificationService } from '../../../../shared/services/notification.service';
+import { Spinner } from "../../../../shared/components/spinner/spinner";
 
 @Component({
   selector: 'app-edit-book-page',
-  imports: [BookForm, RouterLink],
+  imports: [BookForm, RouterLink, Spinner],
   templateUrl: './edit-book-page.html',
   styleUrl: './edit-book-page.scss',
 })

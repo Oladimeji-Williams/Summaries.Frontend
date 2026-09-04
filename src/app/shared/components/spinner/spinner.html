@@ -1,0 +1,9 @@
+<div class="spinner-wrapper" [class]="'spinner-' + size()">
+  <svg viewBox="0 0 50 50" class="spinner-svg">
+    <circle class="spinner-track" cx="25" cy="25" r="20" fill="none" stroke-width="4" />
+    <circle class="spinner-head" cx="25" cy="25" r="20" fill="none" stroke-width="4" stroke-linecap="round" />
+  </svg>
+  @if (label()) {
+    <span class="spinner-label">{{ label() }}</span>
+  }
+</div>

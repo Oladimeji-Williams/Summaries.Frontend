@@ -6,10 +6,11 @@ import { AuthStore } from '../../../../core/auth/state/auth.store';
 import { BookStatus, bookStatusClass, bookStatusLabel } from '../../models';
 import { RatingBar } from '../../components/rating-bar/rating-bar';
 import { DeleteBookButton } from '../../components/delete-book-button/delete-book-button';
+import { Spinner } from "../../../../shared/components/spinner/spinner";
 
 @Component({
   selector: 'app-book-details-page',
-  imports: [RouterLink, DatePipe, RatingBar, DeleteBookButton],
+  imports: [RouterLink, DatePipe, RatingBar, DeleteBookButton, Spinner],
   templateUrl: './book-details-page.html',
   styleUrl: './book-details-page.scss',
 })

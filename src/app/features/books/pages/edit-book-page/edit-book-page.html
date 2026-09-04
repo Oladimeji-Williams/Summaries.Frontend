@@ -8,8 +8,8 @@
   </header>
 
   @if (store.loading() && !store.selectedBook()) {
-    <section class="state">
-      <p>Loading book...</p>
+    <section class="state" aria-live="polite">
+      <app-spinner label="Loading books..." />
     </section>
   }
 

@@ -34,9 +34,7 @@
   </header>
 
   @if (state.loading()) {
-    <section class="state" aria-live="polite">
-      <p>Loading books...</p>
-    </section>
+    <app-book-table-skeleton />
   }
 
   @if (state.error(); as error) {

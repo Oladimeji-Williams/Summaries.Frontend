@@ -8,10 +8,11 @@ import { formatReadingDuration } from '../../utils/reading-duration.util';
 import { TableState, ColumnDef } from '../../../../shared/table/table-state';
 import { ColumnFilter } from '../../../../shared/components/column-filter/column-filter';
 import { SortIndicator } from '../../../../shared/components/sort-indicator/sort-indicator';
+import { Spinner } from "../../../../shared/components/spinner/spinner";
 
 @Component({
   selector: 'app-admin-user-history-page',
-  imports: [DatePipe, ColumnFilter, SortIndicator],
+  imports: [DatePipe, ColumnFilter, SortIndicator, Spinner],
   templateUrl: './admin-user-history-page.html',
   styleUrl: './admin-user-history-page.scss',
 })

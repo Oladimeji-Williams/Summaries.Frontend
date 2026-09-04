@@ -11,7 +11,7 @@ export class ColumnFilter {
   readonly selected = input<ReadonlySet<string> | null>(null);
   readonly apply = output<ReadonlySet<string>>();
   readonly clear = output<void>();
-
+        
   protected readonly open = signal(false);
   protected readonly search = signal('');
   protected readonly draft = signal<Set<string>>(new Set());

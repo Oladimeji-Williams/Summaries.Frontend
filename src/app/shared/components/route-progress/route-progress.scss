@@ -1,0 +1,17 @@
+.route-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  z-index: 1300;
+  background: linear-gradient(90deg, var(--color-primary-600), var(--color-accent-500));
+  background-size: 200% 100%;
+  animation: route-progress-slide 0.9s ease-in-out infinite;
+}
+
+@keyframes route-progress-slide {
+  0% { background-position: 0% 0; transform: scaleX(0.3); transform-origin: left; }
+  50% { transform: scaleX(0.9); }
+  100% { background-position: 100% 0; transform: scaleX(0.3); transform-origin: right; }
+}

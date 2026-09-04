@@ -1,0 +1,11 @@
+<table class="skeleton-table">
+  <tbody>
+    @for (row of [].constructor(rows()); track $index) {
+      <tr>
+        @for (col of [].constructor(7); track $index) {
+          <td><span class="skeleton-bar"></span></td>
+        }
+      </tr>
+    }
+  </tbody>
+</table>

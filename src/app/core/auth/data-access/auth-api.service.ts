@@ -9,7 +9,6 @@ import {
   RegisterRequest,
   UserProfile,
   ForgotPasswordRequest,
-  ForgotPasswordResult,
   ResetPasswordRequest,
   ChangePasswordRequest,
   UpdateProfileRequest,
@@ -49,10 +48,8 @@ export class AuthApiService {
       .pipe(map((r) => r.data));
   }
 
-  forgotPassword(request: ForgotPasswordRequest): Observable<ForgotPasswordResult> {
-    return this.api
-      .post<ForgotPasswordRequest, ApiResponse<ForgotPasswordResult>>(`${this.endpoint}/forgot-password`, request)
-      .pipe(map((r) => r.data));
+  forgotPassword(request: ForgotPasswordRequest): Observable<void> {
+    return this.api.post<ForgotPasswordRequest, void>(`${this.endpoint}/forgot-password`, request);
   }
 
   resetPassword(request: ResetPasswordRequest): Observable<void> {

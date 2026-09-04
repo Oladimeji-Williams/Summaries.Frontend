@@ -43,10 +43,7 @@ export interface AuthResult {
 
 export interface ForgotPasswordRequest {
   readonly email: string;
-}
-
-export interface ForgotPasswordResult {
-  readonly resetToken: string | null;
+  readonly resetUrlBase: string;
 }
 
 export interface ResetPasswordRequest {

@@ -7,10 +7,11 @@ import { getApiErrorMessage } from '../../../../infrastructure/api/api-error.uti
 import { TableState, ColumnDef } from '../../../../shared/table/table-state';
 import { ColumnFilter } from '../../../../shared/components/column-filter/column-filter';
 import { SortIndicator } from "../../../../shared/components/sort-indicator/sort-indicator";
+import { Spinner } from "../../../../shared/components/spinner/spinner";
 
 @Component({
   selector: 'app-admin-users-page',
-  imports: [DatePipe, RouterLink, ColumnFilter, SortIndicator],
+  imports: [DatePipe, RouterLink, ColumnFilter, SortIndicator, Spinner],
   templateUrl: './admin-users-page.html',
   styleUrl: './admin-users-page.scss',
 })

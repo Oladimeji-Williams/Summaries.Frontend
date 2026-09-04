@@ -8,10 +8,11 @@ import { UserProfile } from '../../models/auth.model';
 import { getApiErrorMessage } from '../../../../infrastructure/api/api-error.util';
 import { AvatarCropper, CropResult } from '../../components/avatar-cropper/avatar-cropper';
 import { NotificationService } from '../../../../shared/services/notification.service';
+import { Spinner } from "../../../../shared/components/spinner/spinner";
 
 @Component({
   selector: 'app-profile-page',
-  imports: [DatePipe, RouterLink, ReactiveFormsModule, AvatarCropper],
+  imports: [DatePipe, RouterLink, ReactiveFormsModule, AvatarCropper, Spinner],
   templateUrl: './profile-page.html',
   styleUrl: './profile-page.scss',
 })

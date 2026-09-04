@@ -1,5 +1,9 @@
 <section class="admin-page">
-  @if (loading()) { <p>Loading...</p> }
+  @if (loading()) {
+    <section class="state" aria-live="polite">
+      <app-spinner label="Loading..." />
+    </section>
+  }
   @if (error(); as err) { <p class="error">{{ err }}</p> }
   @if (history(); as h) {
     <h1>{{ h.firstName }} {{ h.lastName }}</h1>

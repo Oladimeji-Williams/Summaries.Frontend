@@ -1,6 +1,9 @@
 <section class="profile-page">
+
   @if (loading()) {
-    <p>Loading...</p>
+    <section class="state" aria-live="polite">
+      <app-spinner label="Loading profile..." />
+    </section>
   }
   @if (error(); as err) {
     <p class="error">{{ err }}</p>
