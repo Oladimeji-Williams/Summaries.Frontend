@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthStatus } from '../../core/auth/components/auth-status/auth-status';
 import { AuthStore } from '../../core/auth/state/auth.store';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-header',
@@ -11,4 +12,5 @@ import { AuthStore } from '../../core/auth/state/auth.store';
 })
 export class Header {
   protected readonly auth = inject(AuthStore);
+  protected readonly logoUrl = environment.logoUrl;
 }
