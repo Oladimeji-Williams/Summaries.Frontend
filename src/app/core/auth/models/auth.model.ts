@@ -4,10 +4,19 @@ export interface LoginRequest {
 }
 
 export interface RegisterRequest {
-  readonly firstName: string;
-  readonly lastName: string;
   readonly email: string;
   readonly password: string;
+  readonly confirmEmailUrlBase: string;
+}
+
+export interface ConfirmEmailRequest {
+  readonly email: string;
+  readonly token: string;
+}
+
+export interface ResendConfirmationRequest {
+  readonly email: string;
+  readonly confirmEmailUrlBase: string;
 }
 
 export interface AuthResult {
@@ -39,6 +48,26 @@ export interface AuthResult {
   readonly displayName: string;
   readonly roles: readonly string[];
   readonly avatarUrl: string | null;
+  readonly requiresTwoFactor: boolean;
+  readonly twoFactorToken: string | null;
+}
+
+export interface VerifyTwoFactorRequest {
+  readonly twoFactorToken: string;
+  readonly code: string;
+}
+
+export interface TwoFactorSetupResult {
+  readonly sharedKey: string;
+  readonly authenticatorUri: string;
+}
+
+export interface ConfirmTwoFactorRequest {
+  readonly code: string;
+}
+
+export interface DisableTwoFactorRequest {
+  readonly currentPassword: string;
 }
 
 export interface ForgotPasswordRequest {

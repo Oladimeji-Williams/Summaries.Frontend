@@ -13,4 +13,5 @@ export const serverRoutes: ServerRoute[] = [
   { path: 'books/:id', renderMode: RenderMode.Client },
   { path: 'books/:id/edit', renderMode: RenderMode.Client },
   { path: '**', renderMode: RenderMode.Server },
+  { path: 'confirm-email', renderMode: RenderMode.Client },
 ];

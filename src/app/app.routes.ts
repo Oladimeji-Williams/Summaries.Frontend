@@ -21,6 +21,10 @@ export const routes: Routes = [
     loadComponent: () => import('./core/auth/pages/reset-password-page/reset-password-page').then(m => m.ResetPasswordPage),
   },
   {
+    path: 'confirm-email',
+    loadComponent: () => import('./core/auth/pages/confirm-email-page/confirm-email-page').then(m => m.ConfirmEmailPage),
+  },
+  {
     path: '',
     component: Shell,
     children: [

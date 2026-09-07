@@ -12,6 +12,12 @@ import {
   ResetPasswordRequest,
   ChangePasswordRequest,
   UpdateProfileRequest,
+  ConfirmEmailRequest,
+  ResendConfirmationRequest,
+  VerifyTwoFactorRequest,
+  TwoFactorSetupResult,
+  ConfirmTwoFactorRequest,
+  DisableTwoFactorRequest,
 } from '../models/auth.model';
 
 @Injectable({ providedIn: 'root' })
@@ -74,5 +80,39 @@ export class AuthApiService {
 
   removeAvatar(): Observable<void> {
     return this.api.delete<void>(`${this.config.baseUrl}/v1/users/me/avatar`);
+  }
+
+  confirmEmail(request: ConfirmEmailRequest): Observable<void> {
+    return this.api.post<ConfirmEmailRequest, void>(`${this.endpoint}/confirm-email`, request);
+  }
+
+  resendConfirmation(request: ResendConfirmationRequest): Observable<void> {
+    return this.api.post<ResendConfirmationRequest, void>(`${this.endpoint}/resend-confirmation`, request);
+  }
+
+  verifyTwoFactor(request: VerifyTwoFactorRequest): Observable<AuthResult> {
+    return this.api
+      .post<VerifyTwoFactorRequest, ApiResponse<AuthResult>>(`${this.endpoint}/verify-two-factor`, request)
+      .pipe(map((r) => r.data));
+  }
+
+  getTwoFactorStatus(): Observable<boolean> {
+    return this.api
+      .get<ApiResponse<boolean>>(`${this.config.baseUrl}/v1/users/me/two-factor`)
+      .pipe(map((r) => r.data));
+  }
+
+  beginTwoFactorSetup(): Observable<TwoFactorSetupResult> {
+    return this.api
+      .post<null, ApiResponse<TwoFactorSetupResult>>(`${this.config.baseUrl}/v1/users/me/two-factor/setup`, null)
+      .pipe(map((r) => r.data));
+  }
+
+  confirmTwoFactorSetup(request: ConfirmTwoFactorRequest): Observable<void> {
+    return this.api.post<ConfirmTwoFactorRequest, void>(`${this.config.baseUrl}/v1/users/me/two-factor/confirm`, request);
+  }
+
+  disableTwoFactor(request: DisableTwoFactorRequest): Observable<void> {
+    return this.api.post<DisableTwoFactorRequest, void>(`${this.config.baseUrl}/v1/users/me/two-factor/disable`, request);
   }
 }

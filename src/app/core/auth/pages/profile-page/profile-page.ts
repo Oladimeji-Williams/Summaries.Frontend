@@ -9,10 +9,11 @@ import { getApiErrorMessage } from '../../../../infrastructure/api/api-error.uti
 import { AvatarCropper, CropResult } from '../../components/avatar-cropper/avatar-cropper';
 import { NotificationService } from '../../../../shared/services/notification.service';
 import { Spinner } from "../../../../shared/components/spinner/spinner";
+import { TwoFactorSetup } from '../../components/two-factor-setup/two-factor-setup';
 
 @Component({
   selector: 'app-profile-page',
-  imports: [DatePipe, RouterLink, ReactiveFormsModule, AvatarCropper, Spinner],
+  imports: [DatePipe, RouterLink, ReactiveFormsModule, AvatarCropper, Spinner, TwoFactorSetup],
   templateUrl: './profile-page.html',
   styleUrl: './profile-page.scss',
 })

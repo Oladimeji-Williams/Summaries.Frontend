@@ -42,6 +42,9 @@
           <div class="meta-row"><dt>City</dt><dd>{{ p.city || '—' }}</dd></div>
           <div class="meta-row"><dt>Country</dt><dd>{{ p.country || '—' }}</dd></div>
         </dl>
+
+        <app-two-factor-setup />
+
         <div class="profile-actions">
           <button type="button" class="button" (click)="startEditing()">Edit details</button>
           <a routerLink="/change-password" class="button">Change password</a>

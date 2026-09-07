@@ -106,14 +106,30 @@ export const AuthStore = signalStore(
         }
       },
 
-      async login(request: LoginRequest): Promise<boolean> {
+      async login(request: LoginRequest): Promise<{ success: boolean; twoFactorToken: string | null }> {
         patchState(store, { loading: true, error: null });
         try {
           const result = await firstValueFrom(authApi.login(request));
+          if (result.requiresTwoFactor) {
+            patchState(store, { loading: false });
+            return { success: false, twoFactorToken: result.twoFactorToken };
+          }
+          applyResult(result);
+          return { success: true, twoFactorToken: null };
+        } catch (err) {
+          patchState(store, { loading: false, error: getApiErrorMessage(err, 'Unable to log in.') });
+          return { success: false, twoFactorToken: null };
+        }
+      },
+
+      async completeTwoFactorLogin(twoFactorToken: string, code: string): Promise<boolean> {
+        patchState(store, { loading: true, error: null });
+        try {
+          const result = await firstValueFrom(authApi.verifyTwoFactor({ twoFactorToken, code }));
           applyResult(result);
           return true;
         } catch (err) {
-          patchState(store, { loading: false, error: getApiErrorMessage(err, 'Unable to log in.') });
+          patchState(store, { loading: false, error: getApiErrorMessage(err, 'Invalid verification code.') });
           return false;
         }
       },

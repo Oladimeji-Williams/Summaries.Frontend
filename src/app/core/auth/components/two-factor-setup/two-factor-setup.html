@@ -1,0 +1,56 @@
+<div class="two-factor-card">
+  <h2>Two-factor authentication</h2>
+
+  @if (loading()) {
+    <p>Loading...</p>
+  } @else if (enabled()) {
+    @if (!showDisableForm()) {
+      <p class="status-enabled">Two-factor authentication is enabled.</p>
+      <button type="button" class="button button-danger" (click)="showDisable()">Disable 2FA</button>
+    } @else {
+      <p>Enter your password to disable two-factor authentication.</p>
+      @if (error(); as err) { <p class="validation-error">{{ err }}</p> }
+      <div class="form-field">
+        <label for="disablePassword">Password</label>
+        <input
+          id="disablePassword"
+          type="password"
+          [value]="disablePassword()"
+          (input)="disablePassword.set($any($event.target).value)"
+        />
+      </div>
+      <button type="button" class="button button-danger" [disabled]="disabling()" (click)="disable()">
+        @if (disabling()) { Disabling... } @else { Confirm disable }
+      </button>
+    }
+  } @else if (!settingUp()) {
+    <p class="status-disabled">Two-factor authentication is not enabled.</p>
+    <button type="button" class="button" (click)="startSetup()">Enable 2FA</button>
+  } @else {
+    <p>Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.), then enter the 6-digit code below.</p>
+    @if (qrDataUrl(); as qr) {
+      <img [src]="qr" alt="2FA QR code" class="qr-code" />
+    }
+    @if (sharedKey(); as key) {
+      <p class="shared-key">Or enter this key manually: <code>{{ key }}</code></p>
+    }
+    @if (error(); as err) { <p class="validation-error">{{ err }}</p> }
+    <div class="form-field">
+      <label for="code">Verification code</label>
+      <input
+        id="code"
+        type="text"
+        inputmode="numeric"
+        maxlength="6"
+        [value]="code()"
+        (input)="code.set($any($event.target).value)"
+      />
+    </div>
+    <div class="two-factor-actions">
+      <button type="button" class="button" (click)="cancelSetup()">Cancel</button>
+      <button type="button" class="button button-primary" [disabled]="confirming()" (click)="confirmSetup()">
+        @if (confirming()) { Verifying... } @else { Confirm and enable }
+      </button>
+    </div>
+  }
+</div>

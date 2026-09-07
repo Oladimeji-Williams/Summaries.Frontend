@@ -1,59 +1,50 @@
-<app-auth-shell
-  title="Create an account"
-  subtitle="Register to start tracking your books."
-  [form]="form"
-  [error]="store.error()"
-  [submitting]="store.loading()"
-  submitLabel="Create account"
-  submittingLabel="Creating account..."
-  switchPrompt="Already have an account?"
-  switchLinkText="Log in"
-  switchLinkPath="/login"
-  (formSubmit)="onSubmit()"
->
-  <div class="form-field">
-    <label for="firstName">First name</label>
-    <input id="firstName" type="text" [formControl]="form.controls.firstName" autocomplete="given-name" />
-    @if (form.controls.firstName.touched && form.controls.firstName.invalid) {
-      <p class="validation-error">First name is required.</p>
-    }
-  </div>
+@if (submitted()) {
+  <section class="auth-page">
+    <div class="auth-card">
+      <h1>Check your email</h1>
+      <p>We've sent a verification link to your email. Please verify your email address before logging in.</p>
+    </div>
+  </section>
+} @else {
+  <app-auth-shell
+    title="Create an account"
+    subtitle="Register with your email and a password."
+    [form]="form"
+    [error]="store.error()"
+    [submitting]="store.loading()"
+    submitLabel="Create account"
+    submittingLabel="Creating account..."
+    switchPrompt="Already have an account?"
+    switchLinkText="Log in"
+    switchLinkPath="/login"
+    (formSubmit)="onSubmit()"
+  >
+    <div class="form-field">
+      <label for="email">Email</label>
+      <input id="email" type="email" [formControl]="form.controls.email" autocomplete="email" />
+      @if (form.controls.email.touched && form.controls.email.invalid) {
+        <p class="validation-error">A valid email is required.</p>
+      }
+    </div>
 
-  <div class="form-field">
-    <label for="lastName">Last name</label>
-    <input id="lastName" type="text" [formControl]="form.controls.lastName" autocomplete="family-name" />
-    @if (form.controls.lastName.touched && form.controls.lastName.invalid) {
-      <p class="validation-error">Last name is required.</p>
-    }
-  </div>
+    <div class="form-field">
+      <label for="password">Password</label>
+      <input id="password" type="password" [formControl]="form.controls.password" autocomplete="new-password" />
+      <small class="field-hint">At least 12 characters, with uppercase, lowercase, a number, and a special character.</small>
+      @if (form.controls.password.touched && form.controls.password.invalid) {
+        <p class="validation-error">Password must be at least 12 characters.</p>
+      }
+    </div>
 
-  <div class="form-field">
-    <label for="email">Email</label>
-    <input id="email" type="email" [formControl]="form.controls.email" autocomplete="email" />
-    @if (form.controls.email.touched && form.controls.email.invalid) {
-      <p class="validation-error">A valid email is required.</p>
-    }
-  </div>
-
-  <div class="form-field">
-    <label for="password">Password</label>
-    <input id="password" type="password" [formControl]="form.controls.password" autocomplete="new-password" />
-    <small class="field-hint">
-      At least 12 characters, with uppercase, lowercase, a number, and a special character.
-    </small>
-    @if (form.controls.password.touched && form.controls.password.invalid) {
-      <p class="validation-error">Password must be at least 12 characters.</p>
-    }
-  </div>
-
-  <div class="form-field">
-    <label for="confirmPassword">Confirm password</label>
-    <input id="confirmPassword" type="password" [formControl]="form.controls.confirmPassword" autocomplete="new-password" />
-    @if (form.controls.confirmPassword.touched && form.controls.confirmPassword.hasError('required')) {
-      <p class="validation-error">Please confirm your password.</p>
-    }
-    @if (form.controls.confirmPassword.touched && form.controls.confirmPassword.hasError('mismatch')) {
-      <p class="validation-error">Passwords do not match.</p>
-    }
-  </div>
-</app-auth-shell>
+    <div class="form-field">
+      <label for="confirmPassword">Confirm password</label>
+      <input id="confirmPassword" type="password" [formControl]="form.controls.confirmPassword" autocomplete="new-password" />
+      @if (form.controls.confirmPassword.touched && form.controls.confirmPassword.hasError('required')) {
+        <p class="validation-error">Please confirm your password.</p>
+      }
+      @if (form.controls.confirmPassword.touched && form.controls.confirmPassword.hasError('mismatch')) {
+        <p class="validation-error">Passwords do not match.</p>
+      }
+    </div>
+  </app-auth-shell>
+}

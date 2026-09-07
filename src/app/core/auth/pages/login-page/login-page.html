@@ -1,31 +1,62 @@
-<app-auth-shell
-  title="Log in"
-  subtitle="Welcome back — enter your details to continue."
-  [form]="form"
-  [error]="store.error()"
-  [submitting]="store.loading()"
-  submitLabel="Log in"
-  submittingLabel="Logging in..."
-  extraLinkText="Forgot password?"
-  extraLinkPath="/forgot-password"
-  switchPrompt="Don't have an account?"
-  switchLinkText="Register"
-  switchLinkPath="/register"
-  (formSubmit)="onSubmit()"
->
-  <div class="form-field">
-    <label for="email">Email</label>
-    <input id="email" type="email" [formControl]="form.controls.email" autocomplete="email" />
-    @if (form.controls.email.touched && form.controls.email.invalid) {
-      <p class="validation-error">A valid email is required.</p>
-    }
-  </div>
+@if (!awaitingTwoFactor()) {
+  <app-auth-shell
+    title="Log in"
+    subtitle="Welcome back — enter your details to continue."
+    [form]="form"
+    [error]="store.error()"
+    [submitting]="store.loading()"
+    submitLabel="Log in"
+    submittingLabel="Logging in..."
+    extraLinkText="Forgot password?"
+    extraLinkPath="/forgot-password"
+    switchPrompt="Don't have an account?"
+    switchLinkText="Register"
+    switchLinkPath="/register"
+    (formSubmit)="onSubmit()"
+  >
+    <div class="form-field">
+      <label for="email">Email</label>
+      <input id="email" type="email" [formControl]="form.controls.email" autocomplete="email" />
+      @if (form.controls.email.touched && form.controls.email.invalid) {
+        <p class="validation-error">A valid email is required.</p>
+      }
+    </div>
+    <div class="form-field">
+      <label for="password">Password</label>
+      <input id="password" type="password" [formControl]="form.controls.password" autocomplete="current-password" />
+      @if (form.controls.password.touched && form.controls.password.invalid) {
+        <p class="validation-error">Password is required.</p>
+      }
+    </div>
+  </app-auth-shell>
+  <p class="resend-link">
+    <a routerLink="/confirm-email">Didn't get a confirmation email?</a>
+  </p>
+} @else {
+  <section class="auth-page">
+    <div class="auth-card">
+      <h1>Two-factor verification</h1>
+      <p>Enter the 6-digit code from your authenticator app.</p>
+      @if (store.error(); as err) {
+        <div class="error" role="alert">{{ err }}</div>
+      }
+      <form (ngSubmit)="onSubmitTwoFactor()" novalidate>
+        <div class="form-field">
+          <label for="code">Verification code</label>
+          <input
+            id="code"
+            type="text"
+            inputmode="numeric"
+            maxlength="6"
+            [value]="twoFactorCode()"
+            (input)="twoFactorCode.set($any($event.target).value)"
+          />
+        </div>
 
-  <div class="form-field">
-    <label for="password">Password</label>
-    <input id="password" type="password" [formControl]="form.controls.password" autocomplete="current-password" />
-    @if (form.controls.password.touched && form.controls.password.invalid) {
-      <p class="validation-error">Password is required.</p>
-    }
-  </div>
-</app-auth-shell>
+        <button type="submit" class="button button-primary" [disabled]="store.loading()">
+          @if (store.loading()) { Verifying... } @else { Verify }
+        </button>
+      </form>
+    </div>
+  </section>
+}
