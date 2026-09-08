@@ -115,4 +115,10 @@ export class AuthApiService {
   disableTwoFactor(request: DisableTwoFactorRequest): Observable<void> {
     return this.api.post<DisableTwoFactorRequest, void>(`${this.config.baseUrl}/v1/users/me/two-factor/disable`, request);
   }
+
+  exchangeExternalLogin(code: string): Observable<AuthResult> {
+    return this.api
+      .post<{ code: string }, ApiResponse<AuthResult>>(`${this.endpoint}/external-login/exchange`, { code })
+      .pipe(map((r) => r.data));
+  }
 }

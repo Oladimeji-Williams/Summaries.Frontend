@@ -3,6 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthStore } from '../../state/auth.store';
 import { AuthShell } from '../../components/auth-shell/auth-shell';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-login-page',
@@ -14,11 +15,9 @@ export class LoginPage {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   protected readonly store = inject(AuthStore);
-
   protected readonly awaitingTwoFactor = signal(false);
   protected readonly twoFactorToken = signal<string | null>(null);
   protected readonly twoFactorCode = signal('');
-
   protected readonly form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]],
@@ -34,13 +33,17 @@ export class LoginPage {
     }
   }
 
-  
-  async onSubmitTwoFactor(): Promise<void> {
+  async onSubmitTwoFactor(event: Event): Promise<void> {
+    event.preventDefault();
     const token = this.twoFactorToken();
     if (!token) return;
     const success = await this.store.completeTwoFactorLogin(token, this.twoFactorCode());
     if (success) {
       void this.router.navigateByUrl('/books');
     }
+  }
+
+  externalLoginUrl(provider: string): string {
+    return `${environment.oauthBaseUrl}/v1/auth/external-login/${provider}`;
   }
 }

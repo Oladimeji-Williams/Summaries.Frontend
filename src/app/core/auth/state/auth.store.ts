@@ -194,6 +194,18 @@ export const AuthStore = signalStore(
           }
         }
       },
+
+      async completeExternalLogin(code: string): Promise<boolean> {
+        patchState(store, { loading: true, error: null });
+        try {
+          const result = await firstValueFrom(authApi.exchangeExternalLogin(code));
+          applyResult(result);
+          return true;
+        } catch (err) {
+          patchState(store, { loading: false, error: getApiErrorMessage(err, 'Unable to complete sign-in.') });
+          return false;
+        }
+      }
     };
   }),
 );

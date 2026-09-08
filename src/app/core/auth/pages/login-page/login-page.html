@@ -28,6 +28,13 @@
         <p class="validation-error">Password is required.</p>
       }
     </div>
+    <div class="social-login">
+      <p class="social-login-divider">Or continue with</p>
+      <a class="button button-social" [href]="externalLoginUrl('google')">Google</a>
+      <a class="button button-social" [href]="externalLoginUrl('microsoft')">Microsoft</a>
+      <a class="button button-social" [href]="externalLoginUrl('facebook')">Facebook</a>
+      <a class="button button-social" [href]="externalLoginUrl('linkedin')">LinkedIn</a>
+    </div>
   </app-auth-shell>
   <p class="resend-link">
     <a routerLink="/confirm-email">Didn't get a confirmation email?</a>
@@ -40,7 +47,7 @@
       @if (store.error(); as err) {
         <div class="error" role="alert">{{ err }}</div>
       }
-      <form (ngSubmit)="onSubmitTwoFactor()" novalidate>
+      <form (submit)="onSubmitTwoFactor($event)" novalidate>
         <div class="form-field">
           <label for="code">Verification code</label>
           <input
