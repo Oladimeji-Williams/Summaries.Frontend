@@ -29,11 +29,48 @@
       }
     </div>
     <div class="social-login">
-      <p class="social-login-divider">Or continue with</p>
-      <a class="button button-social" [href]="externalLoginUrl('google')">Google</a>
-      <a class="button button-social" [href]="externalLoginUrl('microsoft')">Microsoft</a>
-      <a class="button button-social" [href]="externalLoginUrl('facebook')">Facebook</a>
-      <a class="button button-social" [href]="externalLoginUrl('linkedin')">LinkedIn</a>
+      <div class="social-login-divider"><span>Or continue with</span></div>
+      <div class="social-grid">
+        <a class="social-tile" [href]="externalLoginUrl('google')" title="Continue with Google">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="#4285F4" d="M23.52 12.27c0-.85-.08-1.67-.22-2.45H12v4.64h6.46c-.28 1.5-1.13 2.77-2.4 3.62v3h3.88c2.27-2.09 3.58-5.17 3.58-8.81z"/>
+            <path fill="#34A853" d="M12 24c3.24 0 5.96-1.07 7.95-2.92l-3.88-3c-1.08.72-2.45 1.15-4.07 1.15-3.13 0-5.78-2.11-6.73-4.95H1.27v3.1C3.25 21.3 7.31 24 12 24z"/>
+            <path fill="#FBBC05" d="M5.27 14.28A7.2 7.2 0 0 1 4.9 12c0-.79.14-1.56.37-2.28v-3.1H1.27A11.97 11.97 0 0 0 0 12c0 1.93.46 3.76 1.27 5.38z"/>
+            <path fill="#EA4335" d="M12 4.77c1.76 0 3.34.6 4.58 1.79l3.44-3.44C17.95 1.19 15.24 0 12 0 7.31 0 3.25 2.7 1.27 6.62l4 3.1C6.22 6.88 8.87 4.77 12 4.77z"/>
+          </svg>
+          <span class="sr-only">Continue with Google</span>
+        </a>
+        <a class="social-tile" [href]="externalLoginUrl('microsoft')" title="Continue with Microsoft">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="1" y="1" width="10" height="10" fill="#F25022"/>
+            <rect x="13" y="1" width="10" height="10" fill="#7FBA00"/>
+            <rect x="1" y="13" width="10" height="10" fill="#00A4EF"/>
+            <rect x="13" y="13" width="10" height="10" fill="#FFB900"/>
+          </svg>
+          <span class="sr-only">Continue with Microsoft</span>
+        </a>
+        <a class="social-tile" [href]="externalLoginUrl('facebook')" title="Continue with Facebook">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="12" fill="#1877F2"/>
+            <path fill="#fff" d="M15.5 12.4h-2.2V20h-3.1v-7.6H8.6v-2.7h1.6V8.1c0-1.9 1-3.1 3.3-3.1h2v2.7h-1.3c-.9 0-1 .3-1 1v1.3h2.4l-.3 2.7z"/>
+          </svg>
+          <span class="sr-only">Continue with Facebook</span>
+        </a>
+        <a class="social-tile" [href]="externalLoginUrl('linkedin')" title="Continue with LinkedIn">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect width="24" height="24" rx="4" fill="#0A66C2"/>
+            <path fill="#fff" d="M7.6 9.6H5V19h2.6V9.6zM6.3 8.5c.9 0 1.5-.6 1.5-1.4 0-.8-.6-1.4-1.5-1.4s-1.5.6-1.5 1.4c0 .8.6 1.4 1.5 1.4zM19 13.6c0-2.6-1.4-3.8-3.2-3.8-1.5 0-2.1.8-2.5 1.4V9.6H10.7c0 .7 0 9.4 0 9.4h2.6v-5.2c0-.3 0-.6.1-.8.2-.6.7-1.2 1.6-1.2 1.1 0 1.6.9 1.6 2.1V19H19v-5.4z"/>
+          </svg>
+          <span class="sr-only">Continue with LinkedIn</span>
+        </a>
+        <a class="social-tile" [href]="externalLoginUrl('twitter')" title="Continue with X">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="12" fill="#000"/>
+            <path fill="#fff" d="M17.5 6.5h1.9l-4.2 4.8 4.9 6.7h-3.9l-3-4-3.5 4H6.8l4.5-5.1-4.7-6.4h4l2.7 3.7 3.2-3.7zm-.7 10.3h1.1L9.3 7.6H8.1l8.7 9.2z"/>
+          </svg>
+          <span class="sr-only">Continue with X</span>
+        </a>
+      </div>
     </div>
   </app-auth-shell>
   <p class="resend-link">
