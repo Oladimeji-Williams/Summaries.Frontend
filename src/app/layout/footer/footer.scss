@@ -1,7 +1,12 @@
 .site-footer {
-  padding: 1.5rem;
+  padding: 1.5rem 1rem;
+  border-top: 1px solid var(--surface-border);
+}
+
+.site-footer-inner {
+  width: min(100%, var(--content-max-width));
+  margin-inline: auto;
   text-align: center;
-  color: #888;
+  color: var(--text-secondary);
   font-size: 0.85rem;
-  border-top: 1px solid #eee;
 }

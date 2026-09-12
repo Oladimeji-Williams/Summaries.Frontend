@@ -110,7 +110,7 @@
                 (clear)="table.clearFilter('read')"
               />
             </div>
-          </th>          
+          </th>
           <th>
             <div class="col-header">
               <span class="col-label">Status</span>
@@ -129,7 +129,9 @@
               />
             </div>
           </th>
-
+          <th>
+            <span class="col-label">Access</span>
+          </th>
           <th class="actions-column">Actions</th>
         </tr>
       </thead>
@@ -163,17 +165,33 @@
                 {{ bookStatusLabel(book.myReadingStatus?.status ?? BookStatus.NotStarted) }}
               </span>
             </td>
-              <td class="actions-cell">
-                <div class="table-actions">
-                  <a [routerLink]="['/books', book.id]" class="button button-small">View</a>
-                  @if (canEdit(book)) {
-                    <a [routerLink]="['/books', book.id, 'edit']" class="button button-small">Edit</a>
-                  }
-                  @if (auth.isAdmin()) {
-                    <app-delete-book-button [bookId]="book.id" [small]="true" />
+            <td class="access-cell">
+              @if (accessLabel(book); as label) {
+                <div class="access-column">
+                  <span class="access-badge" [class]="accessClass(book)">{{ label }}</span>
+                  @if (canDownloadBook(book)) {
+                    <button type="button" class="button button-small button-primary" [disabled]="downloadingIds().has(book.id)" (click)="downloadBook(book)">
+                      @if (downloadingIds().has(book.id)) { Preparing... } @else { Download }
+                    </button>
+                  } @else if (book.priceKobo !== null) {
+                    <button type="button" class="button button-small button-primary" [disabled]="purchasingIds().has(book.id)" (click)="buyBook(book)">
+                      @if (purchasingIds().has(book.id)) { Redirecting... } @else { Buy }
+                    </button>
                   }
                 </div>
-              </td>
+              }
+            </td>
+            <td class="actions-cell">
+              <div class="table-actions">
+                <a [routerLink]="['/books', book.id]" class="button button-small">View</a>
+                @if (canEdit(book)) {
+                  <a [routerLink]="['/books', book.id, 'edit']" class="button button-small">Edit</a>
+                }
+                @if (auth.isAdmin()) {
+                  <app-delete-book-button [bookId]="book.id" [small]="true" />
+                }
+              </div>
+            </td>
           </tr>
         }
       </tbody>

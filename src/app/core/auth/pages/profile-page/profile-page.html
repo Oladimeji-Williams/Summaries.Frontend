@@ -43,7 +43,8 @@
           <div class="meta-row"><dt>Country</dt><dd>{{ p.country || '—' }}</dd></div>
         </dl>
 
-        <app-two-factor-setup />
+        <app-two-factor-setup [refreshTrigger]="securityRefresh()" (statusChanged)="onSecurityStatusChanged()" />
+        <app-email-sign-in-setup [refreshTrigger]="securityRefresh()" (statusChanged)="onSecurityStatusChanged()" />
 
         <div class="profile-actions">
           <button type="button" class="button" (click)="startEditing()">Edit details</button>

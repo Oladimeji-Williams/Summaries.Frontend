@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, numberAttribute } from '@angular/core';
+import { Component, effect, inject, input, numberAttribute, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { BooksStore } from '../../state/books.store';
@@ -28,6 +28,9 @@ export class BookDetailsPage {
   protected readonly bookStatusLabel = bookStatusLabel;
   protected readonly bookStatusClass = bookStatusClass;
 
+  protected readonly purchasing = signal(false);
+  protected readonly downloading = signal(false);
+
   constructor() {
     effect(() => {
       this.store.viewBook(this.id());
@@ -37,6 +40,39 @@ export class BookDetailsPage {
   protected canEdit(): boolean {
     const status = this.book()?.myReadingStatus?.status ?? BookStatus.NotStarted;
     return this.auth.isAdmin() || status !== BookStatus.Read;
+  }
+
+  protected canDownload(): boolean {
+    const book = this.book();
+    if (!book || !book.hasPdf) return false;
+    return book.priceKobo === null || book.isPurchased || this.auth.isAdmin();
+  }
+
+  protected formattedPrice(priceKobo: number): string {
+    return (priceKobo / 100).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  async buyBook(): Promise<void> {
+    const book = this.book();
+    if (!book) return;
+    this.purchasing.set(true);
+    const authorizationUrl = await this.store.purchaseBook(book.id);
+    if (authorizationUrl) {
+      window.location.href = authorizationUrl;
+    } else {
+      this.purchasing.set(false);
+    }
+  }
+
+  async downloadBook(): Promise<void> {
+    const book = this.book();
+    if (!book) return;
+    this.downloading.set(true);
+    const url = await this.store.downloadBook(book.id);
+    this.downloading.set(false);
+    if (url) {
+      window.open(url, '_blank');
+    }
   }
 
   onDeleted(): void {

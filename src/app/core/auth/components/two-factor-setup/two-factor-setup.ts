@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, effect, inject, input, output, signal } from '@angular/core';
 import * as QRCode from 'qrcode';
 import { AuthApiService } from '../../data-access/auth-api.service';
 import { getApiErrorMessage } from '../../../../infrastructure/api/api-error.util';
@@ -14,6 +14,9 @@ export class TwoFactorSetup implements OnInit {
   private readonly authApi = inject(AuthApiService);
   private readonly notifications = inject(NotificationService);
 
+  readonly refreshTrigger = input<number>(0);
+  readonly statusChanged = output<void>();
+
   protected readonly enabled = signal(false);
   protected readonly loading = signal(true);
   protected readonly settingUp = signal(false);
@@ -27,7 +30,25 @@ export class TwoFactorSetup implements OnInit {
   protected readonly disablePassword = signal('');
   protected readonly showDisableForm = signal(false);
 
+  private isFirstRefresh = true;
+
+  constructor() {
+    effect(() => {
+      this.refreshTrigger();
+      if (this.isFirstRefresh) {
+        this.isFirstRefresh = false;
+        return;
+      }
+      this.load();
+    });
+  }
+
   ngOnInit(): void {
+    this.load();
+  }
+
+  private load(): void {
+    this.loading.set(true);
     this.authApi.getTwoFactorStatus().subscribe({
       next: (enabled) => {
         this.enabled.set(enabled);
@@ -60,7 +81,8 @@ export class TwoFactorSetup implements OnInit {
         this.confirming.set(false);
         this.settingUp.set(false);
         this.enabled.set(true);
-        this.notifications.success('Two-factor authentication enabled.');
+        this.notifications.success('Two-factor authentication enabled. Email sign-in has been turned off.');
+        this.statusChanged.emit();
       },
       error: (err) => {
         this.confirming.set(false);

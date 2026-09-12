@@ -111,3 +111,22 @@
     cursor: not-allowed;
   }
 }
+
+.admin-section {
+  margin: 2rem 0;
+  padding: 1.25rem;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-md);
+  background: var(--surface-hover);
+
+  h3 {
+    margin: 0 0 1rem;
+    color: var(--text-primary);
+  }
+}
+
+.field-success {
+  margin: 0.4rem 0 0;
+  color: var(--color-success-600);
+  font-size: 0.85rem;
+}

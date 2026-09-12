@@ -2,58 +2,74 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.1.
 
-## Development server
+# Summaries Frontend
 
-To start a local development server, run:
+Summaries is a standalone Angular 21 application for browsing, managing, and reading book summaries. It uses lazy-loaded feature routes, signal-based state, typed API boundaries, and SSR-ready Angular application builders.
 
-```bash
-ng serve
-```
+## Requirements
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Node.js compatible with Angular 21
+- npm 11 or newer
+- Access to the backend API configured through the environment files and `proxy.conf.json`
 
-## Code scaffolding
+## Local development
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Install dependencies and start the development server:
 
 ```bash
-ng generate --help
+npm install
+npm start
 ```
 
-## Building
+Open `http://localhost:4200/`. The Angular development server watches the workspace and rebuilds after source changes. API calls are routed through `proxy.conf.json` during local development.
 
-To build the project run:
+## Commands
 
-```bash
-ng build
-```
+| Command | Purpose |
+| --- | --- |
+| `npm start` | Start the local Angular development server. |
+| `npm run build` | Produce optimized browser and server bundles in `dist/`. |
+| `npm test` | Run the unit test suite with Angular's configured test runner. |
+| `npm run watch` | Build continuously using the development configuration. |
+| `npm run serve:ssr:Summaries.Frontend` | Serve the most recent SSR build. |
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Project map
 
-## Running unit tests
+The application is organized by responsibility:
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+- `src/app/core`: cross-cutting capabilities such as auth, admin, payments, configuration, HTTP, and monitoring.
+- `src/app/features`: product capabilities such as books, with pages, components, state, models, mappings, and data access.
+- `src/app/infrastructure`: API, storage, telemetry, and logging adapters.
+- `src/app/layout`: the shared application shell, header, navigation, sidebar, and footer.
+- `src/app/shared`: reusable components, directives, pipes, table helpers, and validators.
+- `src/styles.scss` and `src/styles/`: the global design system and SCSS layers.
 
-```bash
-ng test
-```
+Read [the architecture guide](docs/ARCHITECTURE.md) before adding a new feature or moving code between folders.
 
-## Running end-to-end tests
+## Design system
 
-For end-to-end (e2e) testing, run:
+The UI uses a warm editorial theme built from paper surfaces, ink typography, copper actions, and saffron accents. All reusable visual decisions are represented by CSS custom properties in `src/styles.scss` and consumed by component styles.
 
-```bash
-ng e2e
-```
+Read [the design-system guide](docs/DESIGN-SYSTEM.md) for token usage, responsive layout rules, accessibility requirements, interaction states, and the visual review checklist.
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Engineering conventions
 
-## Additional Resources
+New Angular code should use standalone components, OnPush change detection, signals, `input()`/`output()`, `inject()`, lazy routes, reactive forms, and built-in template control flow. Keep API mapping and error normalization out of page components, and do not use raw colors or one-off global styles in feature SCSS.
+
+## Production verification
+
+Before opening a pull request:
+
+1. Run `npm run build`.
+2. Run `npm test` for behavior or shared-component changes.
+3. Exercise the changed route at mobile and desktop widths.
+4. Check keyboard focus, validation, loading, empty, error, and disabled states.
+5. Update the relevant documentation when a reusable pattern or project boundary changes.
+
+## Angular resources
+
+- [Angular CLI documentation](https://angular.dev/tools/cli)
+- [Angular best practices](https://angular.dev/style-guide)
+- [Angular accessibility guide](https://angular.dev/best-practices/a11y)
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

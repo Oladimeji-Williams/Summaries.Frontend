@@ -205,7 +205,51 @@ export const AuthStore = signalStore(
           patchState(store, { loading: false, error: getApiErrorMessage(err, 'Unable to complete sign-in.') });
           return false;
         }
+      },
+
+    async startLogin(email: string): Promise<'AccountNotFound' | 'UsePassword' | 'EmailCodeSent' | 'NoPasswordSet' | 'EmailDeliveryFailed' | null> {
+      patchState(store, { loading: true, error: null });
+      try {
+        const result = await firstValueFrom(authApi.startLogin(email));
+        patchState(store, { loading: false });
+        return result.outcome as 'AccountNotFound' | 'UsePassword' | 'EmailCodeSent' | 'NoPasswordSet' | 'EmailDeliveryFailed';
+      } catch (err) {
+        patchState(store, { error: getApiErrorMessage(err, 'Unable to continue.'), loading: false });
+        return null;
       }
+    },
+
+    async completeEmailSignInWithCode(email: string, code: string): Promise<boolean> {
+      patchState(store, { loading: true, error: null });
+      try {
+        const result = await firstValueFrom(authApi.completeEmailSignInWithCode(email, code));
+        applyResult(result);
+        return true;
+      } catch (err) {
+        patchState(store, { error: getApiErrorMessage(err, 'Invalid or expired code.'), loading: false });
+        return false;
+      }
+    },
+
+    async completeEmailSignInWithLink(token: string): Promise<boolean> {
+      patchState(store, { loading: true, error: null });
+      try {
+        const result = await firstValueFrom(authApi.completeEmailSignInWithLink(token));
+        applyResult(result);
+        return true;
+      } catch (err) {
+        patchState(store, { error: getApiErrorMessage(err, 'Invalid or expired link.'), loading: false });
+        return false;
+      }
+    },
+
+    clearError(): void {
+      patchState(store, { error: null });
+    },
+    setError(error: string): void {
+      patchState(store, { error, loading: false });
+    },
     };
   }),
+  
 );

@@ -1,5 +1,6 @@
 .details-page {
-  max-width: 800px;
+  width: 100%;
+  max-width: var(--content-max-width);
   margin: 0 auto;
   padding: 2rem;
 }
@@ -141,4 +142,25 @@
 
 .state-error {
   color: var(--color-danger-600);
+}
+
+.book-access {
+  margin-top: 2rem;
+  padding: 1.25rem;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-md);
+  background: var(--surface-hover);
+}
+
+.price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
 }

@@ -2,11 +2,25 @@
   @for (book of books(); track book.id) {
     <article class="book-card">
       <div class="book-card-content">
-        <h2>{{ book.title }}</h2>
+        <div class="book-card-heading">
+          <h2>{{ book.title }}</h2>
+          @if (accessLabel(book); as label) {
+            <span class="access-badge" [class]="accessClass(book)">{{ label }}</span>
+          }
+        </div>
         <p class="author">{{ book.author }}</p>
         <p class="summary">{{ book.description }}</p>
       </div>
       <footer class="book-card-actions">
+        @if (canDownloadBook(book)) {
+          <button type="button" class="button button-primary" [disabled]="downloadingIds().has(book.id)" (click)="downloadBook(book)">
+            @if (downloadingIds().has(book.id)) { Preparing... } @else { Download }
+          </button>
+        } @else if (book.priceKobo !== null && book.hasPdf) {
+          <button type="button" class="button button-primary" [disabled]="purchasingIds().has(book.id)" (click)="buyBook(book)">
+            @if (purchasingIds().has(book.id)) { Redirecting... } @else { Buy }
+          </button>
+        }
         <a [routerLink]="['/books', book.id]" class="button">View</a>
         @if (canEdit(book)) {
           <a [routerLink]="['/books', book.id, 'edit']" class="button">Edit</a>

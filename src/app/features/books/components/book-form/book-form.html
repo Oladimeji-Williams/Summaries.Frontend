@@ -102,6 +102,47 @@
     }
   }
 
+  @if (bookId() !== null && auth.isAdmin()) {
+    <section class="admin-section">
+      <h3>Pricing &amp; PDF</h3>
+
+      <div class="form-field">
+        <label for="priceNaira">Price (₦)</label>
+        <input
+          id="priceNaira"
+          type="text"
+          inputmode="decimal"
+          placeholder="Leave blank for a free book"
+          [value]="priceNaira()"
+          (input)="priceNaira.set($any($event.target).value)"
+          (blur)="onPriceBlur()"
+        />
+        @if (priceError(); as err) {
+          <p class="validation-error">{{ err }}</p>
+        }
+        @if (priceSaved()) {
+          <p class="field-success">Price updated.</p>
+        }
+        <button type="button" class="button" [disabled]="priceSaving()" (click)="savePrice()">
+          @if (priceSaving()) { Saving price... } @else { Save price }
+        </button>
+      </div>
+
+      <div class="form-field">
+        <label for="pdfFile">PDF file {{ hasPdf() ? '(replace current)' : '' }}</label>
+        <input id="pdfFile" type="file" accept="application/pdf" (change)="onPdfSelected($event)" />
+        @if (pdfError(); as err) {
+          <p class="validation-error">{{ err }}</p>
+        }
+        @if (pdfUploaded()) {
+          <p class="field-success">PDF uploaded.</p>
+        }
+        <button type="button" class="button" [disabled]="pdfUploading() || !selectedPdf()" (click)="uploadPdf()">
+          @if (pdfUploading()) { Uploading... } @else { Upload PDF }
+        </button>
+      </div>
+    </section>
+  }
   <div class="form-actions">
     <a [routerLink]="cancelLink()" class="button">Cancel</a>
     <button type="submit" class="button button-primary" [disabled]="submitting()">

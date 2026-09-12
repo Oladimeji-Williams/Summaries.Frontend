@@ -121,4 +121,36 @@ export class AuthApiService {
       .post<{ code: string }, ApiResponse<AuthResult>>(`${this.endpoint}/external-login/exchange`, { code })
       .pipe(map((r) => r.data));
   }
+
+  startLogin(email: string): Observable<{ outcome: string }> {
+    return this.api
+      .post<{ email: string }, ApiResponse<{ outcome: string }>>(`${this.endpoint}/login/start`, { email })
+      .pipe(map((r) => r.data));
+  }
+
+  completeEmailSignInWithCode(email: string, code: string): Observable<AuthResult> {
+    return this.api
+      .post<{ email: string; code: string }, ApiResponse<AuthResult>>(`${this.endpoint}/login/email-code`, { email, code })
+      .pipe(map((r) => r.data));
+  }
+
+  completeEmailSignInWithLink(token: string): Observable<AuthResult> {
+    return this.api
+      .post<{ token: string }, ApiResponse<AuthResult>>(`${this.endpoint}/login/email-link`, { token })
+      .pipe(map((r) => r.data));
+  }
+
+  getEmailSignInStatus(): Observable<boolean> {
+    return this.api
+      .get<ApiResponse<boolean>>(`${this.config.baseUrl}/v1/users/me/email-sign-in`)
+      .pipe(map((r) => r.data));
+  }
+
+  enableEmailSignIn(): Observable<void> {
+    return this.api.post<void, void>(`${this.config.baseUrl}/v1/users/me/email-sign-in/enable`, undefined);
+  }
+
+  disableEmailSignIn(): Observable<void> {
+    return this.api.post<void, void>(`${this.config.baseUrl}/v1/users/me/email-sign-in/disable`, undefined);
+  }
 }

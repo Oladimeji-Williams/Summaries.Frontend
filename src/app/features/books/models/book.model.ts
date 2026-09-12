@@ -18,4 +18,7 @@ export interface Book {
   readonly genre: string | null;
   readonly pageCount: number | null;
   readonly myReadingStatus: ReadingStatus | null;
+  readonly priceKobo: number | null;
+  readonly hasPdf: boolean;
+  readonly isPurchased: boolean;
 }

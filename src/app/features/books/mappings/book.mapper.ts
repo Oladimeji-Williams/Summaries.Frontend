@@ -19,6 +19,9 @@ export interface BookApiResponse {
   genre: string | null;
   pageCount: number | null;
   myReadingStatus: ReadingStatusApiResponse | null;
+  priceKobo: number | null;
+  hasPdf: boolean;
+  isPurchased: boolean;
 }
 
 const STATUS_BY_ORDINAL: Record<number, BookStatus> = {
@@ -55,5 +58,8 @@ export function mapBookResponse(response: BookApiResponse): Book {
     genre: response.genre,
     pageCount: response.pageCount,
     myReadingStatus: mapReadingStatus(response.myReadingStatus),
+    priceKobo: response.priceKobo,
+    hasPdf: response.hasPdf,
+    isPurchased: response.isPurchased,
   };
 }

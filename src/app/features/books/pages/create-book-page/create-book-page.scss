@@ -1,5 +1,6 @@
 .form-page {
-  max-width: 800px;
+  width: 100%;
+  max-width: var(--content-max-width);
   margin: 0 auto;
   padding: 2rem;
 }
@@ -11,13 +12,8 @@
   gap: 1rem;
   margin-bottom: 2rem;
 
-  h1 {
-    margin: 0;
-  }
-
-  p {
-    margin: 0.5rem 0 0;
-  }
+  h1 { margin: 0; }
+  p { margin: 0.5rem 0 0; }
 }
 
 form {
@@ -33,6 +29,7 @@ form {
 }
 
 label {
+  color: var(--text-primary);
   font-weight: 600;
 }
 
@@ -41,14 +38,14 @@ textarea {
   width: 100%;
   box-sizing: border-box;
   padding: 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 0.5rem;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-md);
+  background: var(--surface-card);
+  color: var(--text-primary);
   font: inherit;
 }
 
-textarea {
-  resize: vertical;
-}
+textarea { resize: vertical; }
 
 .form-actions {
   display: flex;
@@ -61,19 +58,37 @@ textarea {
   align-items: center;
   justify-content: center;
   padding: 0.65rem 1rem;
-  border: 1px solid #ccc;
-  border-radius: 0.5rem;
-  background: #fff;
-  color: inherit;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-md);
+  background: var(--surface-card);
+  color: var(--text-primary);
   text-decoration: none;
   cursor: pointer;
   font: inherit;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    border-color: var(--color-primary-500);
+    background: var(--color-primary-50);
+    color: var(--color-primary-700);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+  }
 }
 
 .button-primary {
-  border-color: #111;
-  background: #111;
-  color: #fff;
+  border-color: var(--color-primary-600);
+  background: var(--color-primary-600);
+  color: var(--text-on-primary);
+
+  &:hover {
+    border-color: var(--color-primary-700);
+    background: var(--color-primary-700);
+    color: var(--text-on-primary);
+  }
 }
 
 .button:disabled {
@@ -82,26 +97,24 @@ textarea {
 }
 
 .validation-error,
-.error {
-  color: #b42318;
-}
+.error { color: var(--color-danger-600); }
 
 .error {
   margin-bottom: 1.5rem;
   padding: 1rem;
-  border: 1px solid #f0b8b8;
-  border-radius: 0.5rem;
+  border: 1px solid var(--color-danger-500);
+  border-radius: var(--radius-md);
+  background: var(--color-danger-50);
 }
 
 .field-hint {
   display: block;
   margin-top: 0.4rem;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 0.875rem;
 }
 
 .validation-error {
   margin: 0.4rem 0 0;
-  color: #c62828;
   font-size: 0.875rem;
 }

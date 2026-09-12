@@ -1,0 +1,52 @@
+body {
+	font-family: Georgia, 'Times New Roman', serif;
+	font-size: 1rem;
+	line-height: 1.55;
+}
+
+button,
+input,
+select,
+textarea,
+nav,
+.button,
+.badge,
+.eyebrow {
+	font-family: 'Trebuchet MS', Arial, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4 {
+	color: var(--text-primary);
+	font-weight: 700;
+	line-height: 1.15;
+	letter-spacing: -0.015em;
+}
+
+h1 {
+	font-size: clamp(2rem, 4vw, 3.25rem);
+}
+
+h2 {
+	font-size: clamp(1.45rem, 2.5vw, 2.1rem);
+}
+
+h3 {
+	font-size: 1.25rem;
+}
+
+p {
+	color: var(--text-secondary);
+}
+
+a {
+	color: var(--color-primary-700);
+}
+
+:focus-visible {
+	outline: 2px solid var(--color-primary-500);
+	outline-offset: 3px;
+	box-shadow: var(--shadow-focus);
+}

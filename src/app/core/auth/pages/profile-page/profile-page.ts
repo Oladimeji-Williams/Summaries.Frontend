@@ -10,10 +10,11 @@ import { AvatarCropper, CropResult } from '../../components/avatar-cropper/avata
 import { NotificationService } from '../../../../shared/services/notification.service';
 import { Spinner } from "../../../../shared/components/spinner/spinner";
 import { TwoFactorSetup } from '../../components/two-factor-setup/two-factor-setup';
+import { EmailSignInSetup } from '../../components/email-sign-in-setup/email-sign-in-setup';
 
 @Component({
   selector: 'app-profile-page',
-  imports: [DatePipe, RouterLink, ReactiveFormsModule, AvatarCropper, Spinner, TwoFactorSetup],
+  imports: [DatePipe, RouterLink, ReactiveFormsModule, AvatarCropper, Spinner, TwoFactorSetup, EmailSignInSetup],
   templateUrl: './profile-page.html',
   styleUrl: './profile-page.scss',
 })
@@ -33,6 +34,7 @@ export class ProfilePage implements OnInit {
   protected readonly uploadError = signal<string | null>(null);
   protected readonly showCropper = signal(false);
   protected readonly selectedFile = signal<File | null>(null);
+  protected readonly securityRefresh = signal(0);
 
   protected readonly initials = computed(() => {
     const p = this.profile();
@@ -175,5 +177,9 @@ export class ProfilePage implements OnInit {
         this.uploadError.set(getApiErrorMessage(err, 'Unable to remove image.'));
       },
     });
+  }
+
+  protected onSecurityStatusChanged(): void {
+    this.securityRefresh.update((n) => n + 1);
   }
 }

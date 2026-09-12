@@ -117,6 +117,30 @@ export const BooksStore = signalStore(
       }
     },
 
+    async purchaseBook(id: number): Promise<string | null> {
+      patchState(store, { loading: true, error: null });
+      try {
+        const result = await firstValueFrom(booksApi.purchase(id));
+        patchState(store, { loading: false });
+        return result.authorizationUrl;
+      } catch (err) {
+        patchState(store, { error: getApiErrorMessage(err, 'Unable to start purchase.'), loading: false });
+        return null;
+      }
+    },
+
+    async downloadBook(id: number): Promise<string | null> {
+      patchState(store, { loading: true, error: null });
+      try {
+        const url = await firstValueFrom(booksApi.getDownloadUrl(id));
+        patchState(store, { loading: false });
+        return url;
+      } catch (err) {
+        patchState(store, { error: getApiErrorMessage(err, 'Unable to download book.'), loading: false });
+        return null;
+      }
+    },
+
     clearError(): void {
       patchState(store, { error: null });
     },

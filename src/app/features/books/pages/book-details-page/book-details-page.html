@@ -84,6 +84,23 @@
         </div>
       </section>
 
+      @if (book.hasPdf) {
+        <section class="book-access">
+          @if (canDownload()) {
+            <button type="button" class="button button-primary" [disabled]="downloading()" (click)="downloadBook()">
+              @if (downloading()) { Preparing download... } @else { Download PDF }
+            </button>
+          } @else if (book.priceKobo !== null) {
+            <div class="price-row">
+              <span class="price">₦{{ formattedPrice(book.priceKobo) }}</span>
+              <button type="button" class="button button-primary" [disabled]="purchasing()" (click)="buyBook()">
+                @if (purchasing()) { Redirecting to payment... } @else { Buy PDF }
+              </button>
+            </div>
+          }
+        </section>
+      }
+      
       <footer class="actions">
         @if (canEdit()) {
           <a [routerLink]="['/books', book.id, 'edit']" class="button button-primary">Edit book</a>

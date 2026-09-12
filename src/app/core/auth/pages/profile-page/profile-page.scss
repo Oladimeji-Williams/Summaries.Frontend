@@ -1,12 +1,13 @@
 .profile-page {
-  display: flex;
-  justify-content: center;
-  padding: 3rem 1.5rem;
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 2rem;
 }
 
 .profile-card {
   width: 100%;
-  max-width: 420px;
+  max-width: var(--content-max-width);
   padding: 2rem;
   text-align: center;
   border-radius: var(--radius-lg);
@@ -46,31 +47,56 @@
 
 .avatar-actions {
   display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
   gap: 1rem;
 }
 
 .avatar-upload-label {
-  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-md);
+  background: var(--surface-card);
+  font-size: 0.85rem;
   font-weight: 600;
   color: var(--color-primary-600);
-  text-decoration: underline;
   cursor: pointer;
 }
 
 .avatar-remove-label {
-  padding: 0;
-  border: 0;
-  background: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid var(--color-danger-600);
+  border-radius: var(--radius-md);
+  background: var(--color-danger-50);
   font: inherit;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: var(--color-danger-600);
-  text-decoration: underline;
   cursor: pointer;
 
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+  }
+}
+
+@media (max-width: 480px) {
+  .avatar-actions {
+    width: 100%;
+  }
+
+  .avatar-upload-label,
+  .avatar-remove-label {
+    flex: 1 1 10rem;
   }
 }
 

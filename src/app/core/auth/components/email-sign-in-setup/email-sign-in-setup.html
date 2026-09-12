@@ -1,0 +1,21 @@
+<div class="email-signin-card">
+  <h2>Sign in with email</h2>
+
+  @if (loading()) {
+    <p>Loading...</p>
+  } @else {
+    @if (error(); as err) { <p class="validation-error">{{ err }}</p> }
+    @if (enabled()) {
+      <p class="status-enabled">Email sign-in is enabled. Password login is turned off for this account.</p>
+      <button type="button" class="button button-danger" [disabled]="toggling()" (click)="disable()">
+        @if (toggling()) { Disabling... } @else { Disable email sign-in }
+      </button>
+    } @else {
+      <p class="status-disabled">Sign in by entering your email and receiving a one-time code or link instead of a password.</p>
+      <p class="field-hint">Enabling this turns off two-factor authentication, if it's currently on.</p>
+      <button type="button" class="button" [disabled]="toggling()" (click)="enable()">
+        @if (toggling()) { Enabling... } @else { Enable email sign-in }
+      </button>
+    }
+  }
+</div>

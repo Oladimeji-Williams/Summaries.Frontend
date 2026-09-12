@@ -1,0 +1,33 @@
+<section class="auth-page">
+  <div class="auth-card">
+    @if (missingToken()) {
+      <h1>Verification expired</h1>
+      <p>Start the sign-in process again to request a new verification code.</p>
+      <a routerLink="/login" class="button button-primary">Back to login</a>
+    } @else {
+      <h1>Two-factor verification</h1>
+      <p>Enter the 6-digit code from your authenticator app.</p>
+      @if (store.error(); as error) {
+        <div class="error" role="alert">{{ error }}</div>
+      }
+      <form (submit)="submit($event)" novalidate>
+        <div class="form-field">
+          <label for="twoFactorCode">Verification code</label>
+          <input
+            id="twoFactorCode"
+            type="text"
+            inputmode="numeric"
+            autocomplete="one-time-code"
+            maxlength="6"
+            [value]="code()"
+            (input)="code.set($any($event.target).value)"
+          />
+        </div>
+        <button type="submit" class="button button-primary" [disabled]="store.loading() || !code().trim()">
+          @if (store.loading()) { Verifying... } @else { Verify }
+        </button>
+      </form>
+      <p class="back-link"><a routerLink="/login">Use a different account</a></p>
+    }
+  </div>
+</section>

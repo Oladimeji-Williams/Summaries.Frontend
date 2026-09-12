@@ -1,0 +1,12 @@
+<section class="auth-page">
+  <div class="auth-card">
+    @if (status() === 'checking') {
+      <h1>Signing you in...</h1>
+      <p>Please wait.</p>
+    } @else {
+      <h1>Link expired</h1>
+      <p>This sign-in link is invalid or has expired.</p>
+      <a routerLink="/login" class="button button-primary">Back to login</a>
+    }
+  </div>
+</section>

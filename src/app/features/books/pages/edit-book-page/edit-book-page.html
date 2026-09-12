@@ -28,12 +28,16 @@
         <a [routerLink]="['/books', book.id]" class="button">View book</a>
       </section>
     } @else {
+
       <app-book-form
         [initialValue]="initialValue()"
         [currentStatus]="currentStatus()"
         [statusEditable]="statusEditable()"
         [metadataEditable]="metadataEditable()"
         [submitting]="store.loading()"
+        [bookId]="id()"
+        [currentPriceKobo]="book.priceKobo"
+        [hasPdf]="book.hasPdf"
         submitLabel="Save changes"
         submittingLabel="Saving..."
         (save)="onSave($event)"

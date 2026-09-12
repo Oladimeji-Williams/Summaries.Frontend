@@ -1,0 +1,10 @@
+.theme-accent {
+	color: var(--color-primary-600);
+}
+
+.surface-card {
+	border: 1px solid var(--surface-border);
+	border-radius: var(--radius-lg);
+	background: var(--surface-card);
+	box-shadow: var(--shadow-sm);
+}

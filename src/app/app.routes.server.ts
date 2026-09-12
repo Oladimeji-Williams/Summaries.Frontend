@@ -19,6 +19,10 @@ export const serverRoutes: ServerRoute[] = [
   { path: 'books/:id', renderMode: RenderMode.Client },
   { path: 'books/:id/edit', renderMode: RenderMode.Client },
 
+  { path: 'payments/callback', renderMode: RenderMode.Client },
+  
+  { path: 'login/verify', renderMode: RenderMode.Client },
+  
   // MUST be last
   { path: '**', renderMode: RenderMode.Server },
 ];

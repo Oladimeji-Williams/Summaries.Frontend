@@ -9,6 +9,11 @@ import { UpdateBook } from '../models/update-book.model';
 import { MarkAsReadRequest } from '../models/mark-as-read.model';
 import { BookApiResponse, mapBookResponse } from '../mappings/book.mapper';
 
+export interface InitiatePurchaseResult {
+  authorizationUrl: string;
+  reference: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class BooksApiService {
   private readonly api = inject(ApiClient);
@@ -47,5 +52,27 @@ export class BooksApiService {
 
   markAsRead(id: number, request: MarkAsReadRequest): Observable<void> {
     return this.api.post<MarkAsReadRequest, void>(`${this.endpoint}/${id}/mark-as-read`, request);
+  }
+
+  purchase(id: number): Observable<InitiatePurchaseResult> {
+    return this.api
+      .post<void, ApiResponse<InitiatePurchaseResult>>(`${this.endpoint}/${id}/purchase`, undefined)
+      .pipe(map((response) => response.data));
+  }
+
+  getDownloadUrl(id: number): Observable<string> {
+    return this.api
+      .get<ApiResponse<string>>(`${this.endpoint}/${id}/download`)
+      .pipe(map((response) => response.data));
+  }
+
+  updatePrice(id: number, priceKobo: number | null): Observable<void> {
+    return this.api.put<{ priceKobo: number | null }, void>(`${this.endpoint}/${id}/price`, { priceKobo });
+  }
+
+  uploadPdf(id: number, file: File): Observable<void> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.api.postFormData<void>(`${this.endpoint}/${id}/pdf`, formData);
   }
 }

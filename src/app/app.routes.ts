@@ -5,6 +5,13 @@ import { adminGuard } from './core/auth/admin.guard';
 
 export const routes: Routes = [
   {
+    path: 'login/two-factor',
+    loadComponent: () =>
+      import('./core/auth/pages/two-factor-verify-page/two-factor-verify-page')
+        .then(m => m.TwoFactorVerifyPage),
+  },
+
+  {
     path: 'login',
     loadComponent: () =>
       import('./core/auth/pages/login-page/login-page')
@@ -46,7 +53,13 @@ export const routes: Routes = [
       import('./core/auth/pages/auth-callback-page/auth-callback-page')
         .then(m => m.AuthCallbackPage),
   },
-
+  {
+    path: 'payments/callback',
+    loadComponent: () =>
+      import('./core/payments/pages/payment-callback-page/payment-callback-page')
+        .then(m => m.PaymentCallbackPage),
+  },
+  
   {
     path: '',
     component: Shell,
@@ -87,6 +100,13 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./core/admin/admin.routes')
             .then(m => m.adminRoutes),
+      },
+
+      {
+        path: 'login/verify',
+        loadComponent: () =>
+          import('./core/auth/pages/email-sign-in-verify-page/email-sign-in-verify-page')
+            .then(m => m.EmailSignInVerifyPage),
       },
 
       // ALWAYS LAST

@@ -6,4 +6,8 @@
 
 .app-main {
   flex: 1;
+  width: 100%;
+  background:
+    linear-gradient(120deg, var(--surface-glow), transparent 42%),
+    var(--surface-page);
 }
