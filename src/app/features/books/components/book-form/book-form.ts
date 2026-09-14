@@ -1,10 +1,9 @@
 import { Component, effect, inject, input, output, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
 import { trimmedRequired } from '../../validators/book-form.validators';
 import { BookStatus, BookFormValue, bookStatusLabel } from '../../models';
-import { BooksApiService } from '../../data-access/books-api.service';
+import { BooksStore } from '../../state/books.store';
 import { AuthStore } from '../../../../core/auth/state/auth.store';
 import { getApiErrorMessage } from '../../../../infrastructure/api/api-error.util';
 
@@ -16,7 +15,7 @@ import { getApiErrorMessage } from '../../../../infrastructure/api/api-error.uti
 })
 export class BookForm {
   private readonly fb = inject(FormBuilder);
-  private readonly booksApi = inject(BooksApiService);
+  private readonly booksStore = inject(BooksStore);
   protected readonly auth = inject(AuthStore);
 
   readonly initialValue = input<BookFormValue | null>(null);
@@ -145,7 +144,7 @@ export class BookForm {
 
     this.priceSaving.set(true);
     try {
-      await firstValueFrom(this.booksApi.updatePrice(id, priceKobo));
+      await this.booksStore.updatePrice(id, priceKobo);
       this.priceSaved.set(true);
     } catch (err) {
       this.priceError.set(getApiErrorMessage(err, 'Unable to update price.'));
@@ -162,7 +161,7 @@ export class BookForm {
     this.pdfError.set(null);
     this.pdfUploading.set(true);
     try {
-      await firstValueFrom(this.booksApi.uploadPdf(id, file));
+      await this.booksStore.uploadPdf(id, file);
       this.pdfUploaded.set(true);
       this.selectedPdf.set(null);
     } catch (err) {

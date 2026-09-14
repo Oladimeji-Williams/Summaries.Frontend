@@ -3,7 +3,10 @@ import { ChangeDetectionStrategy, Component, inject, PLATFORM_ID, signal } from 
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthStatus } from '../../core/auth/components/auth-status/auth-status';
 import { AuthStore } from '../../core/auth/state/auth.store';
+import { LocalStorageService } from '../../infrastructure/storage/local-storage.service';
 import { environment } from '../../../environments/environment';
+
+const THEME_STORAGE_KEY = 'summaries-theme';
 
 @Component({
   selector: 'app-header',
@@ -19,10 +22,11 @@ export class Header {
 
   private readonly document = inject(DOCUMENT);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly storage = inject(LocalStorageService);
 
   constructor() {
     if (isPlatformBrowser(this.platformId)) {
-      const storedTheme = localStorage.getItem('summaries-theme');
+      const storedTheme = this.storage.getItem(THEME_STORAGE_KEY);
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       const theme = storedTheme === 'dark' || (storedTheme !== 'light' && prefersDark) ? 'dark' : 'light';
       this.applyTheme(theme);
@@ -32,10 +36,7 @@ export class Header {
   protected toggleTheme(): void {
     const theme = this.isDarkTheme() ? 'light' : 'dark';
     this.applyTheme(theme);
-
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem('summaries-theme', theme);
-    }
+    this.storage.setItem(THEME_STORAGE_KEY, theme);
   }
 
   private applyTheme(theme: 'light' | 'dark'): void {

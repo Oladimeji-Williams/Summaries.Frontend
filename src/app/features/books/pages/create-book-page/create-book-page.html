@@ -15,7 +15,7 @@
   }
 
   <app-book-form
-    [submitting]="store.loading()"
+    [submitting]="store.isLoading()"
     submitLabel="Create book"
     submittingLabel="Creating..."
     (save)="onSave($event)"

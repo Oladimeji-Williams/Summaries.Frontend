@@ -1,10 +1,11 @@
-import { computed, inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { computed, inject } from '@angular/core';
 import { signalStore, withState, withComputed, withMethods, patchState } from '@ngrx/signals';
 import { firstValueFrom } from 'rxjs';
 import { AuthApiService } from '../data-access/auth-api.service';
 import { AuthResult, LoginRequest, RegisterRequest } from '../models/auth.model';
 import { getApiErrorMessage } from '../../../infrastructure/api/api-error.util';
+import { LocalStorageService } from '../../../infrastructure/storage/local-storage.service';
+import { withRequestStatus } from '../../state/with-request-status.feature';
 
 const STORAGE_KEY = 'summaries.auth';
 
@@ -17,8 +18,6 @@ type AuthState = {
   displayName: string | null;
   avatarUrl: string | null;
   roles: readonly string[];
-  loading: boolean;
-  error: string | null;
 };
 
 const initialState: AuthState = {
@@ -30,28 +29,33 @@ const initialState: AuthState = {
   displayName: null,
   avatarUrl: null,
   roles: [],
-  loading: false,
-  error: null,
 };
+
+type StartLoginOutcome =
+  | 'AccountNotFound'
+  | 'UsePassword'
+  | 'EmailCodeSent'
+  | 'NoPasswordSet'
+  | 'EmailDeliveryFailed';
 
 export const AuthStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
+  withRequestStatus(),
   withComputed(({ accessToken, roles }) => ({
     isAuthenticated: computed(() => accessToken() !== null),
     isAdmin: computed(() => roles().includes('Admin')),
   })),
-  withMethods((store, authApi = inject(AuthApiService), platformId = inject(PLATFORM_ID)) => {
+  withMethods((store, authApi = inject(AuthApiService), storage = inject(LocalStorageService)) => {
     function persist(result: AuthResult | null): void {
-      if (!isPlatformBrowser(platformId)) return;
       if (result) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(result));
+        storage.setJson(STORAGE_KEY, result);
       } else {
-        localStorage.removeItem(STORAGE_KEY);
+        storage.removeItem(STORAGE_KEY);
       }
     }
 
-    function applyResult(result: AuthResult): void {
+    function applySession(result: AuthResult): void {
       patchState(store, {
         accessToken: result.accessToken,
         refreshToken: result.refreshToken,
@@ -61,75 +65,62 @@ export const AuthStore = signalStore(
         displayName: result.displayName,
         roles: result.roles,
         avatarUrl: result.avatarUrl,
-        loading: false,
-        error: null,
       });
+    }
+
+    function applyResult(result: AuthResult): void {
+      applySession(result);
+      store.setFulfilled();
       persist(result);
     }
 
     return {
       restoreSession(): void {
-        if (!isPlatformBrowser(platformId)) return;
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return;
-        const result: AuthResult = JSON.parse(raw);
+        const result = storage.getJson<AuthResult>(STORAGE_KEY);
+        if (!result) return;
         if (new Date(result.accessTokenExpiresAtUtc) <= new Date()) {
           persist(null);
           return;
         }
-        patchState(store, {
-          accessToken: result.accessToken,
-          refreshToken: result.refreshToken,
-          accessTokenExpiresAtUtc: result.accessTokenExpiresAtUtc,
-          userId: result.userId,
-          email: result.email,
-          displayName: result.displayName,
-          roles: result.roles,
-          avatarUrl: result.avatarUrl,
-        });
-
-        const rawParsed = JSON.parse(raw);
-        if (rawParsed.avatarUrl) {
-          patchState(store, { avatarUrl: rawParsed.avatarUrl });
-        }
+        applySession(result);
       },
 
       async register(request: RegisterRequest): Promise<boolean> {
-        patchState(store, { loading: true, error: null });
+        store.setPending();
         try {
           await firstValueFrom(authApi.register(request));
-          patchState(store, { loading: false });
+          store.setFulfilled();
           return true;
         } catch (err) {
-          patchState(store, { loading: false, error: getApiErrorMessage(err, 'Unable to register.') });
+          store.setError(getApiErrorMessage(err, 'Unable to register.'));
           return false;
         }
       },
 
       async login(request: LoginRequest): Promise<{ success: boolean; twoFactorToken: string | null }> {
-        patchState(store, { loading: true, error: null });
+        store.setPending();
         try {
           const result = await firstValueFrom(authApi.login(request));
           if (result.requiresTwoFactor) {
-            patchState(store, { loading: false });
+            store.setFulfilled();
             return { success: false, twoFactorToken: result.twoFactorToken };
           }
           applyResult(result);
           return { success: true, twoFactorToken: null };
         } catch (err) {
-          patchState(store, { loading: false, error: getApiErrorMessage(err, 'Unable to log in.') });
+          store.setError(getApiErrorMessage(err, 'Unable to log in.'));
           return { success: false, twoFactorToken: null };
         }
       },
 
       async completeTwoFactorLogin(twoFactorToken: string, code: string): Promise<boolean> {
-        patchState(store, { loading: true, error: null });
+        store.setPending();
         try {
           const result = await firstValueFrom(authApi.verifyTwoFactor({ twoFactorToken, code }));
           applyResult(result);
           return true;
         } catch (err) {
-          patchState(store, { loading: false, error: getApiErrorMessage(err, 'Invalid verification code.') });
+          store.setError(getApiErrorMessage(err, 'Invalid verification code.'));
           return false;
         }
       },
@@ -164,92 +155,66 @@ export const AuthStore = signalStore(
       updateDisplayName(firstName: string, lastName: string): void {
         const displayName = `${firstName} ${lastName}`;
         patchState(store, { displayName });
-        if (isPlatformBrowser(platformId)) {
-          const raw = localStorage.getItem(STORAGE_KEY);
-          if (raw) {
-            const stored = JSON.parse(raw);
-            localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...stored, displayName }));
-          }
-        }
+        storage.patchJson<AuthResult>(STORAGE_KEY, { displayName });
       },
 
       updateAvatar(avatarUrl: string): void {
         patchState(store, { avatarUrl });
-        if (isPlatformBrowser(platformId)) {
-          const raw = localStorage.getItem(STORAGE_KEY);
-          if (raw) {
-            const stored = JSON.parse(raw);
-            localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...stored, avatarUrl }));
-          }
-        }
+        storage.patchJson<AuthResult>(STORAGE_KEY, { avatarUrl });
       },
 
       clearAvatar(): void {
         patchState(store, { avatarUrl: null });
-        if (isPlatformBrowser(platformId)) {
-          const raw = localStorage.getItem(STORAGE_KEY);
-          if (raw) {
-            const stored = JSON.parse(raw);
-            localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...stored, avatarUrl: null }));
-          }
-        }
+        storage.patchJson<AuthResult>(STORAGE_KEY, { avatarUrl: null });
       },
 
       async completeExternalLogin(code: string): Promise<boolean> {
-        patchState(store, { loading: true, error: null });
+        store.setPending();
         try {
           const result = await firstValueFrom(authApi.exchangeExternalLogin(code));
           applyResult(result);
           return true;
         } catch (err) {
-          patchState(store, { loading: false, error: getApiErrorMessage(err, 'Unable to complete sign-in.') });
+          store.setError(getApiErrorMessage(err, 'Unable to complete sign-in.'));
           return false;
         }
       },
 
-    async startLogin(email: string): Promise<'AccountNotFound' | 'UsePassword' | 'EmailCodeSent' | 'NoPasswordSet' | 'EmailDeliveryFailed' | null> {
-      patchState(store, { loading: true, error: null });
-      try {
-        const result = await firstValueFrom(authApi.startLogin(email));
-        patchState(store, { loading: false });
-        return result.outcome as 'AccountNotFound' | 'UsePassword' | 'EmailCodeSent' | 'NoPasswordSet' | 'EmailDeliveryFailed';
-      } catch (err) {
-        patchState(store, { error: getApiErrorMessage(err, 'Unable to continue.'), loading: false });
-        return null;
-      }
-    },
+      async startLogin(email: string): Promise<StartLoginOutcome | null> {
+        store.setPending();
+        try {
+          const result = await firstValueFrom(authApi.startLogin(email));
+          store.setFulfilled();
+          return result.outcome as StartLoginOutcome;
+        } catch (err) {
+          store.setError(getApiErrorMessage(err, 'Unable to continue.'));
+          return null;
+        }
+      },
 
-    async completeEmailSignInWithCode(email: string, code: string): Promise<boolean> {
-      patchState(store, { loading: true, error: null });
-      try {
-        const result = await firstValueFrom(authApi.completeEmailSignInWithCode(email, code));
-        applyResult(result);
-        return true;
-      } catch (err) {
-        patchState(store, { error: getApiErrorMessage(err, 'Invalid or expired code.'), loading: false });
-        return false;
-      }
-    },
+      async completeEmailSignInWithCode(email: string, code: string): Promise<boolean> {
+        store.setPending();
+        try {
+          const result = await firstValueFrom(authApi.completeEmailSignInWithCode(email, code));
+          applyResult(result);
+          return true;
+        } catch (err) {
+          store.setError(getApiErrorMessage(err, 'Invalid or expired code.'));
+          return false;
+        }
+      },
 
-    async completeEmailSignInWithLink(token: string): Promise<boolean> {
-      patchState(store, { loading: true, error: null });
-      try {
-        const result = await firstValueFrom(authApi.completeEmailSignInWithLink(token));
-        applyResult(result);
-        return true;
-      } catch (err) {
-        patchState(store, { error: getApiErrorMessage(err, 'Invalid or expired link.'), loading: false });
-        return false;
-      }
-    },
-
-    clearError(): void {
-      patchState(store, { error: null });
-    },
-    setError(error: string): void {
-      patchState(store, { error, loading: false });
-    },
+      async completeEmailSignInWithLink(token: string): Promise<boolean> {
+        store.setPending();
+        try {
+          const result = await firstValueFrom(authApi.completeEmailSignInWithLink(token));
+          applyResult(result);
+          return true;
+        } catch (err) {
+          store.setError(getApiErrorMessage(err, 'Invalid or expired link.'));
+          return false;
+        }
+      },
     };
   }),
-  
 );

@@ -79,7 +79,7 @@ export class TwoFactorVerifyPage {
   }
 
   private async verifyCode(): Promise<void> {
-    if (!this.twoFactorToken || this.code().length !== 6 || this.store.loading()) return;
+    if (!this.twoFactorToken || this.code().length !== 6 || this.store.isLoading()) return;
 
     const success = await this.store.completeTwoFactorLogin(this.twoFactorToken, this.code());
     if (success) {

@@ -7,7 +7,7 @@
     <a routerLink="/books" class="button">Back to books</a>
   </header>
 
-  @if (store.loading() && !store.selectedBook()) {
+  @if (store.isLoading() && !store.selectedBook()) {
     <section class="state" aria-live="polite">
       <app-spinner label="Loading books..." />
     </section>
@@ -34,7 +34,7 @@
         [currentStatus]="currentStatus()"
         [statusEditable]="statusEditable()"
         [metadataEditable]="metadataEditable()"
-        [submitting]="store.loading()"
+        [submitting]="store.isLoading()"
         [bookId]="id()"
         [currentPriceKobo]="book.priceKobo"
         [hasPdf]="book.hasPdf"

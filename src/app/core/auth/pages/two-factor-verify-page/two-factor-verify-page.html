@@ -30,7 +30,7 @@
             }
           </div>
         </div>
-        @if (store.loading()) { <p class="code-status" aria-live="polite">Verifying...</p> }
+        @if (store.isLoading()) { <p class="code-status" aria-live="polite">Verifying...</p> }
       </form>
       <p class="back-link"><a routerLink="/login">Use a different account</a></p>
     }

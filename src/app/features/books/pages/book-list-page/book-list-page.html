@@ -33,7 +33,7 @@
     </div>
   </header>
 
-  @if (state.loading()) {
+  @if (state.isLoading()) {
     <app-book-table-skeleton />
   }
 
@@ -45,7 +45,7 @@
     </section>
   }
 
-  @if (!state.loading() && !state.error() && state.hasBooks()) {
+  @if (!state.isLoading() && !state.error() && state.hasBooks()) {
     @if (viewMode() === 'grid') {
       <app-book-grid [books]="state.books()" />
     }
@@ -54,7 +54,7 @@
     }
   }
 
-  @if (!state.loading() && !state.error() && !state.hasBooks()) {
+  @if (!state.isLoading() && !state.error() && !state.hasBooks()) {
     <section class="state">
       <h2>No books yet</h2>
       <p>Create your first book.</p>

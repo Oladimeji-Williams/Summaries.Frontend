@@ -3,7 +3,7 @@ import { DatePipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { BooksStore } from '../../state/books.store';
 import { AuthStore } from '../../../../core/auth/state/auth.store';
-import { BookStatus, bookStatusClass, bookStatusLabel } from '../../models';
+import { BookStatus, bookStatusClass, bookStatusLabel, canEditBook, canDownloadBook } from '../../models';
 import { RatingBar } from '../../components/rating-bar/rating-bar';
 import { DeleteBookButton } from '../../components/delete-book-button/delete-book-button';
 import { Spinner } from "../../../../shared/components/spinner/spinner";
@@ -22,7 +22,7 @@ export class BookDetailsPage {
   readonly id = input.required({ transform: numberAttribute });
 
   protected readonly book = this.store.selectedBook;
-  protected readonly loading = this.store.loading;
+  protected readonly loading = this.store.isLoading;
   protected readonly error = this.store.error;
   protected readonly BookStatus = BookStatus;
   protected readonly bookStatusLabel = bookStatusLabel;
@@ -38,14 +38,13 @@ export class BookDetailsPage {
   }
 
   protected canEdit(): boolean {
-    const status = this.book()?.myReadingStatus?.status ?? BookStatus.NotStarted;
-    return this.auth.isAdmin() || status !== BookStatus.Read;
+    const book = this.book();
+    return book !== null && canEditBook(book, this.auth.isAdmin());
   }
 
   protected canDownload(): boolean {
     const book = this.book();
-    if (!book || !book.hasPdf) return false;
-    return book.priceKobo === null || book.isPurchased || this.auth.isAdmin();
+    return book !== null && canDownloadBook(book, this.auth.isAdmin());
   }
 
   protected formattedPrice(priceKobo: number): string {

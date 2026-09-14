@@ -1,6 +1,6 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Book, BookStatus } from '../../models';
+import { Book, BookStatus, canEditBook, canDownloadBook, bookAccessClass, bookAccessLabel } from '../../models';
 import { AuthStore } from '../../../../core/auth/state/auth.store';
 import { BooksStore } from '../../state/books.store';
 import { DeleteBookButton } from '../delete-book-button/delete-book-button';
@@ -21,25 +21,19 @@ export class BookGrid {
   protected readonly downloadingIds = signal<ReadonlySet<number>>(new Set());
 
   protected canEdit(book: Book): boolean {
-    return this.auth.isAdmin() || (book.myReadingStatus?.status ?? BookStatus.NotStarted) !== BookStatus.Read;
+    return canEditBook(book, this.auth.isAdmin());
   }
 
   protected accessLabel(book: Book): string | null {
-    if (!book.hasPdf) return null;
-    if (book.priceKobo === null) return 'Free';
-    if (book.isPurchased || this.auth.isAdmin()) return 'Owned';
-    return `₦${(book.priceKobo / 100).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    return bookAccessLabel(book, this.auth.isAdmin());
   }
 
   protected accessClass(book: Book): string {
-    if (book.priceKobo === null) return 'access-free';
-    if (book.isPurchased || this.auth.isAdmin()) return 'access-owned';
-    return 'access-buy';
+    return bookAccessClass(book, this.auth.isAdmin());
   }
 
   protected canDownloadBook(book: Book): boolean {
-    if (!book.hasPdf) return false;
-    return book.priceKobo === null || book.isPurchased || this.auth.isAdmin();
+    return canDownloadBook(book, this.auth.isAdmin());
   }
 
   async buyBook(book: Book): Promise<void> {
