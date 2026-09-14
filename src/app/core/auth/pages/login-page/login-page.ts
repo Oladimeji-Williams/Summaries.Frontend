@@ -24,6 +24,7 @@ export class LoginPage {
 
   protected readonly emailCode = signal('');
   protected readonly verifyingCode = signal(false);
+  protected readonly codeDigits = [0, 1, 2, 3, 4, 5];
 
   protected readonly form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
@@ -77,9 +78,57 @@ export class LoginPage {
 
   async onVerifyEmailCode(event: Event): Promise<void> {
     event.preventDefault();
+    await this.verifyEmailCode();
+  }
+
+  protected onCodeInput(index: number, event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const digit = target.value.replace(/\D/g, '').slice(-1);
+    const code = this.emailCode().padEnd(6, '').split('');
+    code[index] = digit;
+    this.emailCode.set(code.join('').slice(0, 6));
+
+    if (digit && index < 5) {
+      this.focusCodeInput(index + 1);
+    }
+    if (code.every(Boolean)) {
+      void this.verifyEmailCode();
+    }
+  }
+
+  protected onCodeKeydown(index: number, event: KeyboardEvent): void {
+    if (event.key === 'Backspace' && !this.emailCode()[index] && index > 0) {
+      this.focusCodeInput(index - 1);
+    }
+    if (event.key === 'ArrowLeft' && index > 0) {
+      event.preventDefault();
+      this.focusCodeInput(index - 1);
+    }
+    if (event.key === 'ArrowRight' && index < 5) {
+      event.preventDefault();
+      this.focusCodeInput(index + 1);
+    }
+  }
+
+  protected onCodePaste(event: ClipboardEvent): void {
+    event.preventDefault();
+    const pastedCode = event.clipboardData?.getData('text').replace(/\D/g, '').slice(0, 6) ?? '';
+    this.emailCode.set(pastedCode);
+    if (pastedCode.length === 6) {
+      void this.verifyEmailCode();
+    }
+  }
+
+  private focusCodeInput(index: number): void {
+    document.getElementById(`emailCode-${index}`)?.focus();
+  }
+
+  private async verifyEmailCode(): Promise<void> {
     const email = this.emailControl.value.trim();
+    const code = this.emailCode();
+    if (code.length !== 6 || this.verifyingCode()) return;
     this.verifyingCode.set(true);
-    const success = await this.store.completeEmailSignInWithCode(email, this.emailCode());
+    const success = await this.store.completeEmailSignInWithCode(email, code);
     this.verifyingCode.set(false);
     if (success) {
       void this.router.navigateByUrl('/books');

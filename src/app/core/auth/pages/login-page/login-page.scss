@@ -159,3 +159,30 @@ form {
   text-decoration: underline;
   cursor: pointer;
 }
+
+.code-inputs {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(2.5rem, 1fr));
+  gap: 0.55rem;
+  width: 100%;
+}
+
+.code-inputs input {
+  width: 100%;
+  min-width: 0;
+  aspect-ratio: 1;
+  padding: 0.5rem;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-md);
+  background: var(--surface-card);
+  color: var(--text-primary);
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.code-status {
+  margin: 0;
+  color: var(--text-secondary);
+  text-align: center;
+}

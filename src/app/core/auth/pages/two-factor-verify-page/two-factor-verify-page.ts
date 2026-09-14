@@ -16,6 +16,7 @@ export class TwoFactorVerifyPage {
   protected readonly store = inject(AuthStore);
 
   protected readonly code = signal('');
+  protected readonly codeDigits = [0, 1, 2, 3, 4, 5];
   protected readonly missingToken = signal(false);
   private readonly twoFactorToken: string | null;
 
@@ -32,9 +33,55 @@ export class TwoFactorVerifyPage {
 
   protected async submit(event: Event): Promise<void> {
     event.preventDefault();
-    if (!this.twoFactorToken || !this.code().trim()) return;
+    await this.verifyCode();
+  }
 
-    const success = await this.store.completeTwoFactorLogin(this.twoFactorToken, this.code().trim());
+  protected onCodeInput(index: number, event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const digit = target.value.replace(/\D/g, '').slice(-1);
+    const code = this.code().padEnd(6, '').split('');
+    code[index] = digit;
+    this.code.set(code.join('').slice(0, 6));
+
+    if (digit && index < 5) {
+      this.focusCodeInput(index + 1);
+    }
+    if (code.every(Boolean)) {
+      void this.verifyCode();
+    }
+  }
+
+  protected onCodeKeydown(index: number, event: KeyboardEvent): void {
+    if (event.key === 'Backspace' && !this.code()[index] && index > 0) {
+      this.focusCodeInput(index - 1);
+    }
+    if (event.key === 'ArrowLeft' && index > 0) {
+      event.preventDefault();
+      this.focusCodeInput(index - 1);
+    }
+    if (event.key === 'ArrowRight' && index < 5) {
+      event.preventDefault();
+      this.focusCodeInput(index + 1);
+    }
+  }
+
+  protected onCodePaste(event: ClipboardEvent): void {
+    event.preventDefault();
+    const pastedCode = event.clipboardData?.getData('text').replace(/\D/g, '').slice(0, 6) ?? '';
+    this.code.set(pastedCode);
+    if (pastedCode.length === 6) {
+      void this.verifyCode();
+    }
+  }
+
+  private focusCodeInput(index: number): void {
+    document.getElementById(`twoFactorCode-${index}`)?.focus();
+  }
+
+  private async verifyCode(): Promise<void> {
+    if (!this.twoFactorToken || this.code().length !== 6 || this.store.loading()) return;
+
+    const success = await this.store.completeTwoFactorLogin(this.twoFactorToken, this.code());
     if (success) {
       void this.router.navigateByUrl('/books');
     }

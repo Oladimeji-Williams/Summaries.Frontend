@@ -118,18 +118,24 @@
       <form (submit)="onVerifyEmailCode($event)" novalidate>
         <div class="form-field">
           <label for="emailCode">Verification code</label>
-          <input
-            id="emailCode"
-            type="text"
-            inputmode="numeric"
-            maxlength="6"
-            [value]="emailCode()"
-            (input)="emailCode.set($any($event.target).value)"
-          />
+          <div class="code-inputs" role="group" aria-label="Six-digit verification code">
+            @for (digit of codeDigits; track digit) {
+              <input
+                [id]="'emailCode-' + digit"
+                type="text"
+                inputmode="numeric"
+                maxlength="1"
+                autocomplete="one-time-code"
+                [value]="emailCode()[digit] || ''"
+                [attr.aria-label]="'Verification code digit ' + (digit + 1)"
+                (input)="onCodeInput(digit, $event)"
+                (keydown)="onCodeKeydown(digit, $event)"
+                (paste)="onCodePaste($event)"
+              />
+            }
+          </div>
         </div>
-        <button type="submit" class="button button-primary" [disabled]="verifyingCode()">
-          @if (verifyingCode()) { Verifying... } @else { Verify }
-        </button>
+        @if (verifyingCode()) { <p class="code-status" aria-live="polite">Verifying...</p> }
       </form>
       <p class="resend-link"><button type="button" class="link-button" (click)="backToEmail()">Use a different email</button></p>
     </div>

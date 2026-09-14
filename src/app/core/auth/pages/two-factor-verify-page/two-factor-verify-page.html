@@ -12,20 +12,25 @@
       }
       <form (submit)="submit($event)" novalidate>
         <div class="form-field">
-          <label for="twoFactorCode">Verification code</label>
-          <input
-            id="twoFactorCode"
-            type="text"
-            inputmode="numeric"
-            autocomplete="one-time-code"
-            maxlength="6"
-            [value]="code()"
-            (input)="code.set($any($event.target).value)"
-          />
+          <label for="twoFactorCode-0">Verification code</label>
+          <div class="code-inputs" role="group" aria-label="Six-digit verification code">
+            @for (digit of codeDigits; track digit) {
+              <input
+                [id]="'twoFactorCode-' + digit"
+                type="text"
+                inputmode="numeric"
+                maxlength="1"
+                autocomplete="one-time-code"
+                [value]="code()[digit] || ''"
+                [attr.aria-label]="'Verification code digit ' + (digit + 1)"
+                (input)="onCodeInput(digit, $event)"
+                (keydown)="onCodeKeydown(digit, $event)"
+                (paste)="onCodePaste($event)"
+              />
+            }
+          </div>
         </div>
-        <button type="submit" class="button button-primary" [disabled]="store.loading() || !code().trim()">
-          @if (store.loading()) { Verifying... } @else { Verify }
-        </button>
+        @if (store.loading()) { <p class="code-status" aria-live="polite">Verifying...</p> }
       </form>
       <p class="back-link"><a routerLink="/login">Use a different account</a></p>
     }
